@@ -12,6 +12,7 @@
   "author": "James",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^16.5.0",
     "moment": "^2.30.1"
   },
   "devDependencies": {
