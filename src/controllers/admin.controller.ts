@@ -2,9 +2,9 @@ import { T } from "../libs/types/common";
 import { Request, Response } from "express";
 import MemberService from "../models/Member.service";
 
-const libraryController: T = {};
+const adminController: T = {};
 
-libraryController.goHome = (req: Request, res: Response) => {
+adminController.goHome = (req: Request, res: Response) => {
   try {
     res.send("Home Page");
   } catch (error) {
@@ -12,7 +12,7 @@ libraryController.goHome = (req: Request, res: Response) => {
   }
 };
 
-libraryController.getLogin = (req: Request, res: Response) => {
+adminController.getLogin = (req: Request, res: Response) => {
   try {
     res.send("Login Page");
   } catch (error) {
@@ -20,7 +20,7 @@ libraryController.getLogin = (req: Request, res: Response) => {
   }
 };
 
-libraryController.getSignup = (req: Request, res: Response) => {
+adminController.getSignup = (req: Request, res: Response) => {
   try {
     res.send("Signup Page");
   } catch (error) {
@@ -28,4 +28,4 @@ libraryController.getSignup = (req: Request, res: Response) => {
   }
 };
 
-export default libraryController;
+export default adminController;
