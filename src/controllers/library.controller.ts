@@ -1,6 +1,6 @@
-import { T } from "../libs/types/enums/member.enum";
+import { T } from "../libs/types/common";
 import { Request, Response } from "express";
-import MemberService from "../models/member.service";
+import MemberService from "../models/Member.service";
 
 const libraryController: T = {};
 

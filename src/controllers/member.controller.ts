@@ -1,6 +1,5 @@
-import { T } from "../libs/types/enums/member.enum";
 import { Request, Response } from "express";
-
+import { T } from "../libs/types/common";
 const memberController: T = {};
 
 export default memberController;
