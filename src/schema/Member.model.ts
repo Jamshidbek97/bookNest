@@ -22,13 +22,12 @@ const memberSchema = new Schema(
     memberPhone: {
       type: String,
       index: { unique: true, sparse: true },
-      required: true,
       trim: true,
     },
     memberEmail: {
       type: String,
-      required: true,
       unique: true,
+      sparse: true,
       trim: true,
       lowercase: true,
       match: [/^\S+@\S+\.\S+$/, "Invalid email format"],
@@ -62,5 +61,13 @@ const memberSchema = new Schema(
   },
   { timestamps: true }
 );
+
+memberSchema.pre("validate", function (next) {
+  if (!this.memberPhone && !this.memberEmail) {
+    this.invalidate("memberPhone", "Either phone number or email is required.");
+    this.invalidate("memberEmail", "Either email or phone number is required.");
+  }
+  next();
+});
 
 export default mongoose.model("Member", memberSchema);
