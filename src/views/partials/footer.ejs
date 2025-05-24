@@ -1,0 +1,20 @@
+<footer class="admin-footer">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-6">
+        <span class="footer-text">
+          &copy; <%= new Date().getFullYear() %> BookNest Admin. All rights
+          reserved.
+        </span>
+      </div>
+      <div class="col-md-6 text-end">
+        <span class="version-badge"> v1.0.0 </span>
+        <% if (typeof user !== 'undefined' && user) { %>
+        <span class="user-info">
+          Logged in as: <strong><%= user.username %></strong>
+        </span>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</footer>

@@ -13,7 +13,16 @@ adminController.goHome = (req: Request, res: Response) => {
   try {
     console.log("goHome");
 
-    res.send("Home Page");
+    res.render("admin/dashboard", {
+      title: "Dashboard",
+      currentPage: "dashboard",
+      bookCount: 42,
+      pendingOrders: 5,
+      notifications: [
+        { type: "success", message: "Welcome back!" },
+        { type: "info", message: "5 new orders today" },
+      ],
+    });
   } catch (error) {
     console.log("Error: goHome", error);
   }
