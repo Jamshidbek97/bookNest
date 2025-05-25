@@ -1,9 +1,0 @@
-<% if (typeof notifications !== 'undefined' && notifications.length) { %>
-<div class="notifications-container">
-  <% notifications.forEach(notification => { %>
-  <div class="alert alert-<%= notification.type %>">
-    <%= notification.message %>
-  </div>
-  <% }); %>
-</div>
-<% } %>
