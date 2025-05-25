@@ -1,89 +1,50 @@
-/* Base Styles */
-:root {
-  --primary: #6440fb;
-  --primary-light: #8a6cff;
-  --text: #2d3748;
-  --text-light: #718096;
-  --background: #f8f9fa;
-  --white: #ffffff;
-}
-
-body {
-  font-family: "Poppins", sans-serif;
+body,
+html {
   margin: 0;
   padding: 0;
-  background-color: var(--background);
-  color: var(--text);
+  height: 100%;
+  font-family: "Poppins", sans-serif;
+  color: #fefefe;
+  background-color: #000;
+  overflow: hidden;
 }
 
-/* Particles.js Container */
+.navigation-menu {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+}
+
+.nav a {
+  font-size: 1.5rem;
+  color: #ffe09f;
+  transition: 0.3s;
+}
+
+.nav a:hover {
+  color: #ffffff;
+  text-shadow: 0 0 10px #fffaa6;
+}
+
 #particles-js {
   position: fixed;
   width: 100%;
   height: 100%;
-  z-index: -1;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  z-index: 1;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
 }
 
-/* Home Container */
-.home-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-/* Navigation */
-.navigation-menu {
-  margin-bottom: 3rem;
-}
-
-.nav-list {
-  display: flex;
-  gap: 1.5rem;
-  list-style: none;
-  padding: 0;
-  justify-content: center;
-}
-
-.nav-list a {
-  text-decoration: none;
-  color: var(--text);
-  font-weight: 500;
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
-  transition: all 0.3s ease;
-}
-
-.nav-list a:hover {
-  color: var(--primary);
-}
-
-.nav-list a.active {
-  background-color: var(--primary);
-  color: white;
-}
-
-/* Hero Section */
-.hero {
+.title {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
   text-align: center;
-  margin-top: 5rem;
-}
-
-.hero h1 {
-  font-size: 3rem;
-  margin-bottom: 1rem;
-  background: linear-gradient(to right, var(--primary), var(--primary-light));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-.hero p {
-  font-size: 1.2rem;
-  color: var(--text-light);
-  max-width: 600px;
-  margin: 0 auto;
+  color: #ffe09f;
+  font-family: "Merriweather", serif;
+  font-size: large;
+  text-shadow: 0 0 10px #000;
 }

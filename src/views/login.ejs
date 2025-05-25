@@ -1,40 +1,45 @@
 <%- include('includes/header') %>
-<link rel="stylesheet" href="/css/login.css" />
 
-<main class="auth-container">
-  <form class="login-form" action="/admin/login" method="POST">
-    <div class="form-header">
-      <h2>Admin Login</h2>
-      <div class="form-links">
-        <a href="/admin">← Back to Home</a>
-        <span>Not registered? <a href="/admin/signup">Sign up</a></span>
+<link rel="stylesheet" type="text/css" href="/css/login.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.js"></script>
+<body>
+  <form class="login-container" action="/admin/login" METHOD="POST">
+    <div class="login-frame">
+      <div class="login-top">
+        <span>Enter</span>
+        <div>Go back <a href="/admin" style="color: #6440fb">Home</a></div>
+        <p>
+          Not registered yet?
+          <a href="/admin/signup" style="color: #6440fb">Signup</a>
+        </p>
       </div>
+      <div class="login-input-frame">
+        <div class="login-input-container">
+          <label>Restaurant *</label>
+          <input
+            type="text"
+            name="memberNick"
+            class="member-nick"
+            placeholder="Username"
+            value=""
+            required
+          />
+        </div>
+        <div class="login-input-container">
+          <label>Password *</label>
+          <input
+            type="password"
+            name="memberPassword"
+            class="member-password"
+            placeholder="Password"
+            value=""
+            required
+          />
+        </div>
+      </div>
+      <button class="login-btn btn" name="login" type="submit">Login</button>
     </div>
-
-    <div class="form-group">
-      <label for="username">Username</label>
-      <input
-        type="text"
-        id="username"
-        name="memberNick"
-        placeholder="Enter username"
-        required
-      />
-    </div>
-
-    <div class="form-group">
-      <label for="password">Password</label>
-      <input
-        type="password"
-        id="password"
-        name="memberPassword"
-        placeholder="Enter password"
-        required
-      />
-    </div>
-
-    <button type="submit" class="submit-btn">Login</button>
   </form>
-</main>
+</body>
 
 <%- include('includes/footer') %>

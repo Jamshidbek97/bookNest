@@ -13,9 +13,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(morgan(MORGAN_FORMAT));
 
-app.use(expressLayouts);
-app.set("layout", "layouts/layout");
-
 /** Sessions */
 
 /** Views */

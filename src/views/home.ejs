@@ -1,29 +1,57 @@
 <%- include('includes/header') %>
-<link rel="stylesheet" href="/css/home.css" />
 
-<div id="particles-js"></div>
-<main class="home-container">
-  <nav class="navigation-menu">
-    <ul class="nav-list">
-      <li><a href="/admin" class="active">Home</a></li>
-      <% member = null %> <% if(!member) { %>
-      <li><a href="/admin/signup">Signup</a></li>
-      <li><a href="/admin/login">Login</a></li>
-      <% } else { %>
-      <li><a href="/admin/product/all">Products</a></li>
-      <li><a href="/admin/user/all">Users</a></li>
-      <li>
-        <a href="/admin/logout" onclick="return confirm('Logout?')">Logout</a>
-      </li>
-      <% } %>
-    </ul>
-  </nav>
+<link rel="stylesheet" type="text/css" href="/css/home.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+<link
+  href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap"
+  rel="stylesheet"
+/>
 
-  <section class="hero">
-    <h1>Welcome to BookNest Admin</h1>
-    <p>Manage your bookstore efficiently</p>
-  </section>
-</main>
+<body>
+  <div id="particles-js"></div>
+  <div class="home-container">
+    <div class="navigation-menu">
+      <ul class="nav justify-content-center">
+        <li class="nav-item" style="cursor: pointer">
+          <a class="nav-link active" href="/admin">Home</a>
+        </li>
+        <% member=0 %> <% if(!member) { %>
+        <li class="nav-item" style="cursor: pointer">
+          <a class="nav-link" href="/admin/signup">Signup</a>
+        </li>
+        <li class="nav-item" style="cursor: pointer">
+          <a class="nav-link" href="/admin/login">Login</a>
+        </li>
+        <% } else { %>
+        <li class="nav-item" style="cursor: pointer">
+          <a class="nav-link" href="/admin/product/all">Menu</a>
+        </li>
+        <li class="nav-item" style="cursor: pointer">
+          <a class="nav-link" href="/admin/user/all">Users</a>
+        </li>
+        <li
+          class="nav-item"
+          style="cursor: pointer"
+          onclick="return confirm('Do you want to logout?')"
+        >
+          <a class="nav-link" href="/admin/logout">Logout</a>
+        </li>
+        <% } %>
+      </ul>
+    </div>
 
-<script src="/js/home.js"></script>
+    <div class="animation-frame">
+      <div class="animation-wrapper">
+        <div class="title">
+          <h1>Welcome to Admin Panel</h1>
+          <p>Manage your platform with style ✨</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="text/javascript" src="/js/home.js"></script>
+</body>
+
 <%- include('includes/footer') %>
