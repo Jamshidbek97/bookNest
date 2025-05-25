@@ -1,0 +1,29 @@
+<%- include('includes/header') %>
+<link rel="stylesheet" href="/css/home.css" />
+
+<div id="particles-js"></div>
+<main class="home-container">
+  <nav class="navigation-menu">
+    <ul class="nav-list">
+      <li><a href="/admin" class="active">Home</a></li>
+      <% member = null %> <% if(!member) { %>
+      <li><a href="/admin/signup">Signup</a></li>
+      <li><a href="/admin/login">Login</a></li>
+      <% } else { %>
+      <li><a href="/admin/product/all">Products</a></li>
+      <li><a href="/admin/user/all">Users</a></li>
+      <li>
+        <a href="/admin/logout" onclick="return confirm('Logout?')">Logout</a>
+      </li>
+      <% } %>
+    </ul>
+  </nav>
+
+  <section class="hero">
+    <h1>Welcome to BookNest Admin</h1>
+    <p>Manage your bookstore efficiently</p>
+  </section>
+</main>
+
+<script src="/js/home.js"></script>
+<%- include('includes/footer') %>

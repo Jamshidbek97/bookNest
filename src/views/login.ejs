@@ -1,0 +1,40 @@
+<%- include('includes/header') %>
+<link rel="stylesheet" href="/css/login.css" />
+
+<main class="auth-container">
+  <form class="login-form" action="/admin/login" method="POST">
+    <div class="form-header">
+      <h2>Admin Login</h2>
+      <div class="form-links">
+        <a href="/admin">← Back to Home</a>
+        <span>Not registered? <a href="/admin/signup">Sign up</a></span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input
+        type="text"
+        id="username"
+        name="memberNick"
+        placeholder="Enter username"
+        required
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input
+        type="password"
+        id="password"
+        name="memberPassword"
+        placeholder="Enter password"
+        required
+      />
+    </div>
+
+    <button type="submit" class="submit-btn">Login</button>
+  </form>
+</main>
+
+<%- include('includes/footer') %>
