@@ -2,6 +2,7 @@ import MemberModel from "../schema/Member.model";
 import { LoginInput, Member, MemberInput } from "../libs/types/member";
 import Errors, { HttpCode, Message } from "../libs/Errors";
 import bcrypt from "bcryptjs";
+import { MemberType } from "../libs/types/enums/member.enum";
 
 class MemberService {
   private readonly memberModel;
@@ -10,6 +11,15 @@ class MemberService {
   }
 
   /** SPA */
+
+  public async getAdmin(): Promise<Member> {
+    const result = await this.memberModel
+      .findOne({ memberType: MemberType.ADMIN })
+      .exec();
+    if (!result) throw new Errors(HttpCode.NOT_FOUND, Message.MEMBER_NOT_FOUND);
+
+    return result as unknown as Member;
+  }
   public async signup(input: MemberInput): Promise<Member> {
     const salt = await bcrypt.genSalt();
     input.memberPassword = await bcrypt.hash(input.memberPassword, salt);
@@ -50,10 +60,10 @@ class MemberService {
   /** SSR */
   public async processSignup(input: MemberInput): Promise<Member> {
     try {
-      // const exist = await this.memberModel
-      //   .findOne({ memberType: MemberType.ADMIN })
-      //   .exec();
-      // if (exist) throw new Errors(HttpCode.FORBIDDEN, Message.CONFLICT);
+      const exist = await this.memberModel
+        .findOne({ memberType: MemberType.ADMIN })
+        .exec();
+      if (exist) throw new Errors(HttpCode.FORBIDDEN, Message.CONFLICT);
 
       const salt = await bcrypt.genSalt();
       input.memberPassword = await bcrypt.hash(input.memberPassword, salt);

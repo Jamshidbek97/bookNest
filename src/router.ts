@@ -3,6 +3,8 @@ import memberController from "./controllers/member.controller";
 
 const router = express.Router();
 
+/********** Member ***********/
+router.get("/member/admin", memberController.getAdmin);
 router.post("/signup", memberController.signup);
 
 router.post("/login", memberController.login);

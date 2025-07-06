@@ -36,7 +36,9 @@ export enum Message {
   MEMBER_REGISTERED = "Member registered successfully",
   MEMBER_EXISTS = "Member already exists",
   MEMBER_NOT_FOUND = "Member not found",
+  MISSING_SECRET_TOKEN = "Secret token is not found",
   INVALID_PASSWORD = "Invalid password",
+  TOKEN_CREATION_FAILED = "Token creation is failed",
 }
 
 class Errors extends Error {
