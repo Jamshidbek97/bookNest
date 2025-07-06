@@ -2,7 +2,7 @@ import { LoginInput, MemberInput } from "../libs/types/member";
 import MemberService from "..//models/Member.service";
 import { T } from "../libs/types/common";
 import { Request, Response } from "express";
-import { MemberType } from "../libs/enums/member.enum";
+import { MemberType } from "../libs/types/enums/member.enum";
 import Errors, { Message, HttpCode } from "../libs/Errors";
 
 const adminController: T = {};

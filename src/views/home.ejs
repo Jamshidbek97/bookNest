@@ -49,6 +49,22 @@
         </div>
       </div>
     </div>
+    <div class="book" id="spinningBook">
+      <img src="your-book-image.jpg" alt="Book Cover" />
+    </div>
+
+    <script>
+      const book = document.getElementById("spinningBook");
+
+      book.addEventListener("click", () => {
+        book.classList.toggle("rotated");
+      });
+
+      // For touch devices
+      book.addEventListener("touchstart", () => {
+        book.classList.toggle("rotated");
+      });
+    </script>
   </div>
 
   <script type="text/javascript" src="/js/home.js"></script>

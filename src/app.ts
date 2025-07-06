@@ -2,7 +2,6 @@ import express from "express";
 import path from "path";
 import router from "./router";
 import routerAdmin from "./router-admin";
-import expressLayouts from "express-ejs-layouts";
 import morgan from "morgan";
 import { MORGAN_FORMAT } from "./libs/config";
 
