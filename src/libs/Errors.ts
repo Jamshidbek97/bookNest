@@ -14,32 +14,49 @@ export enum HttpCode {
 }
 
 export enum Message {
+  // General
   SUCCESS = "Success",
-  CREATED = "Resource successfully created",
-  UPDATED = "Resource successfully updated",
-  DELETED = "Resource successfully deleted",
-
+  CREATED = "Resource created",
+  UPDATED = "Resource updated",
+  DELETED = "Resource deleted",
   BAD_REQUEST = "Bad request",
-  UNAUTHORIZED = "Unauthorized",
-  FORBIDDEN = "Forbidden access",
-  NOT_FOUND = "Resource not found",
-  CONFLICT = "Conflict occurred",
-  VALIDATION_ERROR = "Validation failed",
-
   INTERNAL_ERROR = "Internal server error",
   SERVICE_UNAVAILABLE = "Service unavailable",
 
+  // Auth
   LOGIN_SUCCESS = "Login successful",
   LOGIN_FAILED = "Invalid credentials",
   LOGOUT_SUCCESS = "Logout successful",
+  TOKEN_MISSING = "Access token is missing",
+  TOKEN_INVALID = "Invalid or expired token",
+  TOKEN_CREATION_FAILED = "Token creation failed",
+  BLOCKED_USER = "This user has been blocked",
+  INVALID_PASSWORD = "Invalid password",
+  CONFLICT = "Conflict occurred",
 
+  // Member
   MEMBER_REGISTERED = "Member registered successfully",
   MEMBER_EXISTS = "Member already exists",
   MEMBER_NOT_FOUND = "Member not found",
-  MISSING_SECRET_TOKEN = "Secret token is not found",
-  INVALID_PASSWORD = "Invalid password",
-  TOKEN_CREATION_FAILED = "Token creation is failed",
-  BLOCKED_USER = "This user have been blocked",
+
+  // Product
+  PRODUCT_NOT_FOUND = "Product not found",
+  PRODUCT_EXISTS = "Product already exists",
+  PRODUCT_CREATED = "Product created successfully",
+  PRODUCT_UPDATED = "Product updated successfully",
+  PRODUCT_DELETED = "Product deleted",
+
+  // Order
+  ORDER_PLACED = "Order placed successfully",
+  ORDER_NOT_FOUND = "Order not found",
+  ORDER_EXISTS = "Order already exists",
+  ORDER_CANCELED = "Order canceled successfully",
+
+  // Review / Like
+  REVIEW_ADDED = "Review added",
+  REVIEW_EXISTS = "You already reviewed this item",
+  LIKE_ADDED = "Like added",
+  LIKE_REMOVED = "Like removed",
 }
 
 class Errors extends Error {

@@ -12,10 +12,7 @@ class AuthService {
   public async createToken(payload: Member) {
     const secret = process.env.SECRET_TOKEN;
     if (!secret) {
-      throw new Errors(
-        HttpCode.INTERNAL_SERVER_ERROR,
-        Message.MISSING_SECRET_TOKEN
-      );
+      throw new Errors(HttpCode.INTERNAL_SERVER_ERROR, Message.TOKEN_MISSING);
     }
     return new Promise((resolve, reject) => {
       const duration = `${AUTH_TIMER}h`;
