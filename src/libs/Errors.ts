@@ -42,6 +42,7 @@ export enum Message {
   MEMBER_NOT_FOUND = "Member not found",
   SOMETHING_WENT_WRONG = "Something went wrong",
   UPDATE_FAILED = "Update is failed",
+  NOT_AUTHENTICATED = "You are not authenticated, Please login first",
 
   // Product
   PRODUCT_NOT_FOUND = "Product not found",

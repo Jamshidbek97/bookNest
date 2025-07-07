@@ -1,7 +1,7 @@
 import { AdminRequest, LoginInput, MemberInput } from "../libs/types/member";
 import MemberService from "..//models/Member.service";
 import { T } from "../libs/types/common";
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { MemberType } from "../libs/types/enums/member.enum";
 import Errors, { Message, HttpCode } from "../libs/Errors";
 
@@ -122,6 +122,37 @@ adminController.updateChosenUser = async (req: Request, res: Response) => {
     console.log("Error, update chosen user", err);
     if (err instanceof Errors) res.status(err.code).json(err);
     else res.status(Errors.standard.code).json(Errors.standard);
+  }
+};
+
+adminController.checkAuthSession = async (req: AdminRequest, res: Response) => {
+  try {
+    console.log("Check Authentication session");
+
+    if (req.session?.member)
+      res.send(
+        `<script> alert("HI, ${req.session.member.memberNick}") </script>`
+      );
+    else res.send(`<script> alert("${Message.NOT_AUTHENTICATED}") </script>`);
+  } catch (err) {
+    console.log("Error, Process Login:", err);
+    res.send(err);
+  }
+};
+
+adminController.verifyAdmin = (
+  req: AdminRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  if (req.session?.member?.memberType === MemberType.ADMIN) {
+    req.member = req.session.member;
+    next();
+  } else {
+    const message = Message.NOT_AUTHENTICATED;
+    res.send(
+      `<script> alert("${message}"); window.location.replace('/admin/login') </script>`
+    );
   }
 };
 
