@@ -39,6 +39,7 @@ export enum Message {
   MISSING_SECRET_TOKEN = "Secret token is not found",
   INVALID_PASSWORD = "Invalid password",
   TOKEN_CREATION_FAILED = "Token creation is failed",
+  BLOCKED_USER = "This user have been blocked",
 }
 
 class Errors extends Error {

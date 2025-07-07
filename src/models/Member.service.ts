@@ -2,7 +2,7 @@ import MemberModel from "../schema/Member.model";
 import { LoginInput, Member, MemberInput } from "../libs/types/member";
 import Errors, { HttpCode, Message } from "../libs/Errors";
 import bcrypt from "bcryptjs";
-import { MemberType } from "../libs/types/enums/member.enum";
+import { MemberStatus, MemberType } from "../libs/types/enums/member.enum";
 
 class MemberService {
   private readonly memberModel;
@@ -20,17 +20,16 @@ class MemberService {
 
     return result as unknown as Member;
   }
+
   public async signup(input: MemberInput): Promise<Member> {
     const salt = await bcrypt.genSalt();
     input.memberPassword = await bcrypt.hash(input.memberPassword, salt);
     try {
       const result = await this.memberModel.create(input);
       result.memberPassword = "";
-
       return result.toJSON() as Member;
     } catch (error) {
       console.log("Error: signup", error);
-
       throw new Errors(HttpCode.BAD_REQUEST, Message.MEMBER_EXISTS);
     }
   }
@@ -38,11 +37,21 @@ class MemberService {
   public async login(input: LoginInput): Promise<Member> {
     const member = await this.memberModel
       .findOne(
-        { memberNick: input.memberNick },
-        { memberNick: 1, memberPassword: 1 }
+        {
+          $or: [
+            { memberNick: input.identifier },
+            { memberEmail: input.identifier },
+            { memberPhone: input.identifier },
+          ],
+          memberStatus: { $ne: MemberStatus.DELETE },
+        },
+        { memberNick: 1, memberPassword: 1, memberStatus: 1 }
       )
       .exec();
     if (!member) throw new Errors(HttpCode.NOT_FOUND, Message.MEMBER_NOT_FOUND);
+    else if (member.memberStatus === MemberStatus.BLOCK) {
+      throw new Errors(HttpCode.FORBIDDEN, Message.BLOCKED_USER);
+    }
 
     const isMatch = await bcrypt.compare(
       input.memberPassword,
@@ -80,7 +89,7 @@ class MemberService {
   public async processLogin(input: LoginInput): Promise<Member> {
     const member = await this.memberModel
       .findOne(
-        { memberNick: input.memberNick },
+        // { memberNick: input.memberNick },
         { memberNick: 1, memberPassword: 1 }
       )
       .exec();

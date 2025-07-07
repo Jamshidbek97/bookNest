@@ -3,9 +3,12 @@ import { T } from "../libs/types/common";
 import MemberService from "../models/Member.service";
 import { MemberInput, Member, LoginInput } from "../libs/types/member";
 import Errors, { HttpCode } from "../libs/Errors";
+import AuthService from "../models/Auth.service";
+import { AUTH_TIMER } from "../libs/config";
 const memberController: T = {};
 
 const memberService = new MemberService();
+const authService = new AuthService();
 
 memberController.getAdmin = async (req: Request, res: Response) => {
   try {
@@ -24,25 +27,39 @@ memberController.signup = async (req: Request, res: Response) => {
     console.log("signup");
     const input: MemberInput = req.body;
     const result: Member = await memberService.signup(input);
+    const token = await authService.createToken(result);
+    res.cookie("accessToken", token, {
+      maxAge: AUTH_TIMER * 3600 * 1000,
+      httpOnly: false,
+    });
 
-    res.json({ member: result });
+    res.status(HttpCode.CREATED).json({ member: result, accessToken: token });
   } catch (error) {
     console.log("Error: signup", error);
     if (error instanceof Errors) res.status(error.code).json(error);
     else res.status(Errors.standard.code).json(Errors.standard);
-    // res.json({})
   }
 };
 
 memberController.login = async (req: Request, res: Response) => {
   try {
     console.log("login");
-    const input: LoginInput = req.body;
-    const result = await memberService.login(input);
+    console.log(req.body);
 
-    res.json({ member: result });
+    const input: LoginInput = req.body,
+      result = await memberService.login(input),
+      token = await authService.createToken(result);
+
+    res.cookie("accessToken", token, {
+      maxAge: AUTH_TIMER * 3600 * 1000,
+      httpOnly: false,
+    });
+
+    res.status(HttpCode.OK).json({ member: result, accessToken: token });
   } catch (error) {
     console.log("Error: login", error);
+    if (error instanceof Errors) res.status(error.code).json(error);
+    else res.status(Errors.standard.code).json(Errors.standard);
   }
 };
 
