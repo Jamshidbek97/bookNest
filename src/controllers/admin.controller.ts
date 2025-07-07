@@ -1,4 +1,4 @@
-import { LoginInput, MemberInput } from "../libs/types/member";
+import { AdminRequest, LoginInput, MemberInput } from "../libs/types/member";
 import MemberService from "..//models/Member.service";
 import { T } from "../libs/types/common";
 import { Request, Response } from "express";
@@ -12,7 +12,6 @@ const memberService = new MemberService();
 adminController.goHome = (req: Request, res: Response) => {
   try {
     console.log("goHome");
-
     res.render("home");
   } catch (error) {
     console.log("Error: goHome", error);
@@ -22,7 +21,6 @@ adminController.goHome = (req: Request, res: Response) => {
 adminController.getSignup = (req: Request, res: Response) => {
   try {
     console.log("getSignup");
-
     res.render("signup");
   } catch (error) {
     console.log("Error: getSignup", error);
@@ -32,51 +30,98 @@ adminController.getSignup = (req: Request, res: Response) => {
 adminController.getLogin = (req: Request, res: Response) => {
   try {
     console.log("getLogin");
-
     res.render("login");
   } catch (error) {
     console.log("Error: getLogin", error);
   }
 };
 
-adminController.processSignup = async (req: Request, res: Response) => {
+adminController.processSignup = async (req: AdminRequest, res: Response) => {
   try {
     console.log("processSignup");
+
+    const file = req.file;
+    if (!file)
+      throw new Errors(HttpCode.BAD_REQUEST, Message.SOMETHING_WENT_WRONG);
     const newMember: MemberInput = req.body;
+    newMember.memberImage = file?.path.replace(/\\/g, "/");
     newMember.memberType = MemberType.ADMIN;
 
     const result = await memberService.processSignup(newMember);
 
-    res.status(HttpCode.CREATED).json({
-      message: Message.MEMBER_REGISTERED,
-      data: result,
+    req.session.member = result;
+    req.session.save(function () {
+      res.redirect("/admin/product/all");
     });
   } catch (error) {
-    console.error("Error: processSignup", error);
-    res.status(HttpCode.INTERNAL_SERVER_ERROR).json({
-      message: Message.INTERNAL_ERROR,
-    });
+    console.log("Error, Process Signup:", error);
+    const message =
+      error instanceof Errors ? error.message : Message.SOMETHING_WENT_WRONG;
+    res.send(`
+        <script>
+          alert("${message}");
+          window.location.replace('/admin/signup');
+        </script>
+      `);
   }
 };
 
-adminController.processLogin = async (req: Request, res: Response) => {
+adminController.processLogin = async (req: AdminRequest, res: Response) => {
   try {
     console.log("processLogin");
-    console.log(req.body);
 
     const input: LoginInput = req.body,
       result = await memberService.processLogin(input);
 
-    res.status(HttpCode.OK).json({
-      message: Message.LOGIN_SUCCESS,
-      data: result,
-    });
-    res.status(HttpCode.OK).json({
-      message: Message.LOGIN_SUCCESS,
-      data: result,
+    req.session.member = result;
+    req.session.save(function () {
+      res.redirect("/admin/product/all");
     });
   } catch (error) {
-    console.log("Error: processLogin", error);
+    console.log("Error, Process Login:", error);
+    const message =
+      error instanceof Errors ? error.message : Message.SOMETHING_WENT_WRONG;
+
+    res.send(
+      `<script> alert("${message}");  window.location.replace('/admin/signup');</script>`
+    );
+  }
+};
+
+adminController.logout = async (req: AdminRequest, res: Response) => {
+  try {
+    console.log("logout");
+
+    req.session.destroy(function () {
+      res.redirect("/admin");
+    });
+  } catch (error) {
+    console.log("Error,  Logout:", error);
+    res.redirect("/admin");
+  }
+};
+
+adminController.getUsers = async (req: Request, res: Response) => {
+  try {
+    console.log("get Users");
+    const result = await memberService.getUsers();
+
+    res.render("users", { users: result });
+  } catch (err) {
+    console.log("Error, getUsers", err);
+    res.redirect("/admin/login");
+  }
+};
+
+adminController.updateChosenUser = async (req: Request, res: Response) => {
+  try {
+    console.log("Update chosen user");
+    const result = await memberService.updateChosenUser(req.body);
+    res.status(HttpCode.OK).json({ data: result });
+  } catch (err) {
+    console.log("Error, update chosen user", err);
+    if (err instanceof Errors) res.status(err.code).json(err);
+    else res.status(Errors.standard.code).json(Errors.standard);
   }
 };
 

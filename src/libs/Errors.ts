@@ -3,6 +3,8 @@ export enum HttpCode {
   CREATED = 201,
   NO_CONTENT = 204,
 
+  NOT_MODIFIED = 304,
+
   BAD_REQUEST = 400,
   UNAUTHORIZED = 401,
   FORBIDDEN = 403,
@@ -38,6 +40,8 @@ export enum Message {
   MEMBER_REGISTERED = "Member registered successfully",
   MEMBER_EXISTS = "Member already exists",
   MEMBER_NOT_FOUND = "Member not found",
+  SOMETHING_WENT_WRONG = "Something went wrong",
+  UPDATE_FAILED = "Update is failed",
 
   // Product
   PRODUCT_NOT_FOUND = "Product not found",

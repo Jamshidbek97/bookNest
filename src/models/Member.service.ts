@@ -1,8 +1,14 @@
 import MemberModel from "../schema/Member.model";
-import { LoginInput, Member, MemberInput } from "../libs/types/member";
+import {
+  LoginInput,
+  Member,
+  MemberInput,
+  MemberUpdateInput,
+} from "../libs/types/member";
 import Errors, { HttpCode, Message } from "../libs/Errors";
 import bcrypt from "bcryptjs";
 import { MemberStatus, MemberType } from "../libs/types/enums/member.enum";
+import { shapeIntoMongooseObjectId } from "../libs/config";
 
 class MemberService {
   private readonly memberModel;
@@ -68,19 +74,17 @@ class MemberService {
 
   /** SSR */
   public async processSignup(input: MemberInput): Promise<Member> {
+    const exist = await this.memberModel
+      .findOne({ memberType: MemberType.ADMIN })
+      .exec();
+    if (exist) throw new Errors(HttpCode.FORBIDDEN, Message.CONFLICT);
+
+    const salt = await bcrypt.genSalt();
+    input.memberPassword = await bcrypt.hash(input.memberPassword, salt);
     try {
-      const exist = await this.memberModel
-        .findOne({ memberType: MemberType.ADMIN })
-        .exec();
-      if (exist) throw new Errors(HttpCode.FORBIDDEN, Message.CONFLICT);
-
-      const salt = await bcrypt.genSalt();
-      input.memberPassword = await bcrypt.hash(input.memberPassword, salt);
       const result = await this.memberModel.create(input);
-      const memberObj = result.toObject();
-      memberObj.memberPassword = "";
-
-      return memberObj as unknown as Member;
+      result.memberPassword = "";
+      return result.toJSON() as Member;
     } catch (error) {
       throw new Errors(HttpCode.BAD_REQUEST, Message.INTERNAL_ERROR);
     }
@@ -89,7 +93,13 @@ class MemberService {
   public async processLogin(input: LoginInput): Promise<Member> {
     const member = await this.memberModel
       .findOne(
-        // { memberNick: input.memberNick },
+        {
+          $or: [
+            { memberNick: input.identifier },
+            { memberEmail: input.identifier },
+            { memberPhone: input.identifier },
+          ],
+        },
         { memberNick: 1, memberPassword: 1 }
       )
       .exec();
@@ -106,6 +116,26 @@ class MemberService {
     const result = await this.memberModel.findById(member._id).exec();
 
     return result as unknown as Member;
+  }
+
+  public async getUsers(): Promise<Member[]> {
+    const result = await this.memberModel
+      .find({ memberType: MemberType.USER })
+      .lean()
+      .exec();
+
+    if (!result) throw new Errors(HttpCode.NOT_FOUND, Message.MEMBER_NOT_FOUND);
+    return result as unknown as Member[];
+  }
+
+  public async updateChosenUser(input: MemberUpdateInput): Promise<Member> {
+    input._id = shapeIntoMongooseObjectId(input._id);
+    const result = await this.memberModel
+      .findByIdAndUpdate({ _id: input._id }, input, { new: true })
+      .exec();
+
+    if (!result) throw new Errors(HttpCode.NOT_MODIFIED, Message.UPDATE_FAILED);
+    return result.toJSON() as Member;
   }
 }
 
