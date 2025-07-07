@@ -143,6 +143,8 @@ class MemberService {
       result.memberPassword = "";
       return result.toJSON() as Member;
     } catch (error) {
+      console.log(error);
+
       throw new Errors(HttpCode.BAD_REQUEST, Message.INTERNAL_ERROR);
     }
   }

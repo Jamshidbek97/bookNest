@@ -1,8 +1,25 @@
 <%- include('includes/header') %>
 
 <link rel="stylesheet" type="text/css" href="/css/signup.css" />
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+/>
 
 <body>
+  <div class="background-animation">
+    <div class="book-background"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+  </div>
+
   <div class="signup-container">
     <form
       onsubmit="return validateSignupForm()"
@@ -10,25 +27,26 @@
       method="POST"
       enctype="multipart/form-data"
     >
-      <div class="signup-frame" style="width: 650px">
+      <div class="signup-frame">
         <div class="signup-top">
-          <span>Signup</span>
-          <div>Go back <a href="/admin" style="color: #6440fb">Home</a></div>
-          <p>
-            Already signed up?
-            <a href="/admin/login" style="color: #6440fb">Login</a>
-          </p>
+          <h2>Create Admin Account</h2>
+          <div class="navigation-links">
+            <a href="/admin"><i class="fas fa-arrow-left"></i> Back to Home</a>
+            <span
+              >Already have an account? <a href="/admin/login">Login</a></span
+            >
+          </div>
         </div>
 
-        <div class="sign-input-frame" style="justify-content: space-between">
+        <div class="sign-input-frame">
           <div class="sign-up-frame">
-            <label>Restaurant *</label>
+            <label>Admin *</label>
             <input
               type="text"
               name="memberNick"
               class="member-nick"
               placeholder="Username"
-              value=""
+              required
             />
           </div>
           <div class="sign-up-frame">
@@ -38,74 +56,111 @@
               name="memberPhone"
               class="member-phone"
               placeholder="Phone"
-              value=""
+              required
             />
           </div>
         </div>
-        <div class="sign-input-frame" style="justify-content: space-between">
+
+        <div class="sign-up-frame">
+          <label>Email *</label>
+          <input
+            type="email"
+            name="memberEmail"
+            class="member-email"
+            placeholder="Email"
+            required
+          />
+        </div>
+
+        <div class="sign-input-frame">
           <div class="sign-up-frame">
             <label>Password *</label>
-            <input
-              type="password"
-              name="memberPassword"
-              class="member-password"
-              placeholder="Password"
-              value=""
-            />
+            <div class="password-container">
+              <input
+                type="password"
+                name="memberPassword"
+                class="member-password"
+                placeholder="Password"
+                required
+              />
+              <i
+                class="fas fa-eye toggle-password"
+                onclick="togglePassword('member-password', this)"
+              ></i>
+            </div>
           </div>
           <div class="sign-up-frame">
             <label>Repeat password *</label>
-            <input
-              type="password"
-              name="confirmPassword"
-              class="confirm-password"
-              placeholder="Repeat password"
-              value=""
-            />
+            <div class="password-container">
+              <input
+                type="password"
+                name="confirmPassword"
+                class="confirm-password"
+                placeholder="Repeat password"
+                required
+              />
+              <i
+                class="fas fa-eye toggle-password"
+                onclick="togglePassword('confirm-password', this)"
+              ></i>
+            </div>
           </div>
         </div>
 
         <div class="signup-input-frame">
           <div class="media-frame">
-            <img class="upload-img-frame" src="/img/default.jpeg" />
+            <div class="image-preview-container">
+              <img class="upload-img-frame" src="/img/default.jpeg" />
+              <div class="upload-overlay"><i class="fas fa-camera"></i></div>
+            </div>
             <div class="upload-container">
-              <span class="media-text">Product image</span>
-              <div
-                class="file-box bs3-primary preview-image"
-                style="margin-top: 25px; display: flex"
-              >
+              <span class="media-text">Admin Image</span>
+              <div class="file-box bs3-primary preview-image">
                 <input
                   class="upload-name"
                   value="Choose image"
                   disabled="disabled"
                 />
-                <label for="input-file" class="file-input-label"
-                  >Upload Image</label
-                >
+                <label for="input-file" class="file-input-label">
+                  <i class="fas fa-cloud-upload-alt"></i> Upload Image
+                </label>
                 <input
                   type="file"
                   id="input-file"
                   class="upload-hidden form-control-file member-image"
                   name="memberImage"
+                  accept=".jpg, .jpeg, .png"
                 />
               </div>
               <p class="thumbnail-desc">
-                Please upload restaurant image.<br />
-                Attention only:.jpg, .jpeg, or .png. <br />
-                formats allowed!
+                Please upload admin image. Only .jpg, .jpeg, .png formats
+                allowed.
               </p>
             </div>
           </div>
         </div>
 
-        <input name="memberType" value="RESTAURANT" hidden />
+        <input name="memberType" value="ADMIN" hidden />
 
         <button class="signup-btn btn" name="signup" type="submit">
-          Signup
+          <i class="fas fa-user-plus"></i> Sign Up
         </button>
       </div>
     </form>
   </div>
+
+  <script>
+    function togglePassword(className, icon) {
+      const input = document.querySelector("." + className);
+      if (input.type === "password") {
+        input.type = "text";
+        icon.classList.replace("fa-eye", "fa-eye-slash");
+      } else {
+        input.type = "password";
+        icon.classList.replace("fa-eye-slash", "fa-eye");
+      }
+    }
+  </script>
 
   <script type="text/javascript" src="/js/signup.js"></script>
 </body>

@@ -1,5 +1,6 @@
 import express from "express";
 import adminController from "./controllers/admin.controller";
+import makeUploader from "./libs/utils/uploader";
 
 const routerAdmin = express.Router();
 
@@ -12,7 +13,11 @@ routerAdmin
 
 routerAdmin
   .get("/signup", adminController.getSignup)
-  .post("/signup", adminController.processSignup);
+  .post(
+    "/signup",
+    makeUploader("members").single("memberImage"),
+    adminController.processSignup
+  );
 
 /** BOOKS */
 
