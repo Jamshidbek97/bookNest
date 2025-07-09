@@ -1,6 +1,7 @@
 import express from "express";
 import adminController from "./controllers/admin.controller";
 import makeUploader from "./libs/utils/uploader";
+import productController from "./controllers/product.controller";
 
 const routerAdmin = express.Router();
 
@@ -19,15 +20,15 @@ routerAdmin
     adminController.processSignup
   );
 
-// routerAdmin.get("/logout", adminController.logout);
-// routerAdmin.get("/check-me", adminController.checkAuthSession);
+routerAdmin.get("/logout", adminController.logout);
+routerAdmin.get("/check-me", adminController.checkAuthSession);
 
-// /* BOOKS */
-// routerAdmin.get(
-//   "/product/all",
-//   adminController.verifyRestaurant
-//   // productController.getAllProducts
-// );
+/* BOOKS */
+routerAdmin.get(
+  "/product/all",
+  // adminController.verifyAdmin,
+  productController.getAllProducts
+);
 // routerAdmin.post(
 //   "/product/create",
 //   adminController.verifyRestaurant,

@@ -13,6 +13,8 @@ export interface Book {
   description?: string;
   coverImages?: string[];
   timesBorrowed?: number;
+  bookViews: number;
+  bookLikes: number;
   createdAt?: Date;
   updatedAt?: Date;
 }

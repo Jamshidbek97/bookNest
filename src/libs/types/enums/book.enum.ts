@@ -17,3 +17,11 @@ export enum BookFormat {
   EBOOK = "eBook",
   AUDIOBOOK = "Audiobook",
 }
+
+export enum BookStatus {
+  AVAILABLE = "Available",
+  PAUSE = "Pause",
+  OUT_OF_STOCK = "Out of Stock",
+  DISCONTINUED = "Discontinued",
+  PREORDER = "Preorder",
+}
