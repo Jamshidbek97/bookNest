@@ -4,7 +4,7 @@ import {
   ProductStatus,
   Language,
   ProductCondition,
-} from "../libs/types/enums/product.enum";
+} from "../libs/types/enums/book.enum";
 import mongoose, { Schema } from "mongoose";
 
 const productSchema = new Schema(
