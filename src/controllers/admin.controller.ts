@@ -69,7 +69,7 @@ adminController.processSignup = async (req: AdminRequest, res: Response) => {
 adminController.processLogin = async (req: AdminRequest, res: Response) => {
   try {
     console.log("processLogin");
-    console.log(req.body);
+    console.log("req.body", req.body);
 
     const input: LoginInput = req.body,
       result = await memberService.processLogin(input);
@@ -146,8 +146,11 @@ adminController.verifyAdmin = (
   res: Response,
   next: NextFunction
 ) => {
+  console.log("req:", req.session.member);
   if (req.session?.member?.memberType === MemberType.ADMIN) {
     req.member = req.session.member;
+    console.log(req.member);
+
     next();
   } else {
     const message = Message.NOT_AUTHENTICATED;

@@ -50,6 +50,7 @@ export enum Message {
   PRODUCT_CREATED = "Product created successfully",
   PRODUCT_UPDATED = "Product updated successfully",
   PRODUCT_DELETED = "Product deleted",
+  CREATE_FAILED = "Create Failed",
 
   // Order
   ORDER_PLACED = "Order placed successfully",

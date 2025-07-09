@@ -1,238 +1,202 @@
 <%- include('includes/header') %>
 
 <link rel="stylesheet" type="text/css" href="/css/products.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
 <body>
-  <div class="products-container">
-    <div class="navigation-menu">
-      <ul class="nav justify-content-center">
-        <li class="nav-item" style="cursor: pointer">
-          <a class="nav-link active" href="/admin/">Home</a>
-        </li>
-        <li class="nav-item" style="cursor: pointer">
-          <a class="nav-link" href="/admin/product/all">Menu</a>
-        </li>
-        <li class="nav-item" style="cursor: pointer">
-          <a class="nav-link" href="/admin/user/all">Users</a>
-        </li>
-        <li
-          class="nav-item"
-          style="cursor: pointer"
-          onclick="return confirm('Do you want to logout?')"
-        >
-          <a class="nav-link" href="/admin/logout">Logout</a>
-        </li>
-      </ul>
-    </div>
+  <div class="background-container">
+    <div class="book-background"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+  </div>
 
-    <div class="restaurant-menu-frame">
-      <div class="board">
-        <div class="dishes-table">
-          <span class="new-dish-txt" style="margin-bottom: 30px">
-            RESTAURANT MENU
-          </span>
-          <table class="table table-bordered table-hover">
-            <thead class="thead-light">
-              <tr class="thead-light">
-                <th scope="col">T/r</th>
-                <th scope="col">Product Name</th>
-                <th scope="col">Product Type</th>
-                <th scope="col">Product Volume</th>
-                <th scope="col">Product Price</th>
-                <th scope="col">Product Left Count</th>
-                <th scope="col">Status</th>
+  <div class="products-container">
+    <!-- Navigation Menu -->
+    <nav class="admin-nav">
+      <ul>
+        <li><a href="/admin/"><i class="fas fa-home"></i> Dashboard</a></li>
+        <li class="active"><a href="/admin/product/all"><i class="fas fa-book"></i> Book Inventory</a></li>
+        <li><a href="/admin/user/all"><i class="fas fa-users"></i> Users</a></li>
+        <li><a href="/admin/logout" onclick="return confirm('Do you want to logout?')"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+      </ul>
+    </nav>
+
+    <div class="book-management-container">
+      <!-- Book Inventory Table -->
+      <div class="book-inventory">
+        <div class="inventory-header">
+          <h2><i class="fas fa-book-open"></i> Book Inventory</h2>
+          <button class="btn btn-add" id="add-book-btn">
+            <i class="fas fa-plus-circle"></i> Add New Book
+          </button>
+        </div>
+
+        <div class="table-responsive">
+          <table class="book-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Cover</th>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Genre</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Popularity</th>
+                <th>Status</th>
               </tr>
             </thead>
-            <% products.map(function(value, key){ %>
-
-            <tbody style="background: white">
-              <td><%= key + 1 %></td>
-              <td><%= value.productName %></td>
-              <td><%= value.productCollection %></td>
-              <td>
-                <%= value.productCollection === "DRINK" ?
-                value.productVolume: value.productSize %>
-              </td>
-              <td><%= value.productPrice %></td>
-              <td><%= value.productLeftCount %></td>
-              <td>
-                <select
-                  class="spec-select new-product-status"
-                  id= "<%= value._id %>"
-                  >
-
-                  <option 
-                  value="PAUSE"
-                   <%= value.productStatus === "PAUSE" ? 'selected' : '' %>>
-                   PAUSE
-              </option>
-                  <option value="PROCESS" <%= value.productStatus === "PROCESS" ? 'selected' : '' %> >PROCESS</option>
-                  <option value="DELETE" <%= value.productStatus === "DELETE" ? 'selected' : '' %> >DELETE</option>
-                </select>
-              </td>
+            <tbody>
+              <% books.map(function(book, index){ %>
+              <tr>
+                <td><%= index + 1 %></td>
+                <td class="book-cover">
+                  <% if(book.coverImages && book.coverImages.length > 0) { %>
+                    <img src="/<%= book.coverImages[0] %>" alt="<%= book.title %>">
+                  <% } else { %>
+                    <div class="no-cover"><i class="fas fa-book"></i></div>
+                  <% } %>
+                </td>
+                <td class="book-title"><%= book.title %></td>
+                <td><%= book.author %></td>
+                <td><span class="genre-badge"><%= book.genre %></span></td>
+                <td>$<%= book.price.toFixed(2) %></td>
+                <td>
+                  <span class="stock-count <%= book.stockCount > 0 ? 'in-stock' : 'out-of-stock' %>">
+                    <%= book.stockCount %>
+                  </span>
+                </td>
+                <td>
+                  <div class="popularity-indicator">
+                    <span class="views" title="Views"><i class="fas fa-eye"></i> <%= book.bookViews || 0 %></span>
+                    <span class="likes" title="Likes"><i class="fas fa-heart"></i> <%= book.bookLikes || 0 %></span>
+                    <span class="borrows" title="Borrows"><i class="fas fa-exchange-alt"></i> <%= book.timesBorrowed || 0 %></span>
+                  </div>
+                </td>
+                <td>
+                  <select class="status-select" data-book-id="<%= book._id %>">
+                    <option value="ACTIVE" <%= book.status === 'ACTIVE' ? 'selected' : '' %>>Active</option>
+                    <option value="OUT_OF_STOCK" <%= book.status === 'OUT_OF_STOCK' ? 'selected' : '' %>>Out of Stock</option>
+                    <option value="ARCHIVED" <%= book.status === 'ARCHIVED' ? 'selected' : '' %>>Archived</option>
+                  </select>
+                </td>
+              </tr>
+              <% }) %>
             </tbody>
-            <% }) %>
           </table>
-          <div
-            class="long-input"
-            style="align-items: flex-end; margin-bottom: 25px"
-          >
-            <button class="btn btn-primary" id="process-btn">
-              New Product
-            </button>
-          </div>
         </div>
-        <form
-        onsubmit="return validateForm()"
-          action="/admin/product/create"
-          method="POST"
-          class="dish-container"
-          enctype="multipart/form-data"
-        >
-          <div class="long-input" style="display: flex; align-items: center">
-            <span class="new-dish-txt">NEW PRODUCT DETAIL</span>
-          </div>
-          <div class="login-input-frame">
-            <div class="long-input">
-              <label>Product Name</label>
-              <input
-                type="text"
-                placeholder="Name"
-                name="productName"
-                class="product-name"
-              />
-            </div>
-            <input
-              name="productStatus"
-              value="PAUSE"
-              class="product-status"
-              hidden
-            />
-          </div>
-          <div class="half-input-frame">
-            <div class="half-input">
-              <label>Product Price</label>
-              <input
-                type="number"
-                placeholder="Price"
-                name="productPrice"
-                class="product-price"
-              />
-            </div>
-            <div class="half-input">
-              <label>Product Left Counts</label>
-              <input
-                type="number"
-                placeholder="Counts"
-                name="productLeftCount"
-                class="product-left-count"
-              />
-            </div>
-          </div>
-          <div class="half-input-frame">
-            <div class="half-input">
-              <label>Product Type</label>
-              <select class="product-collection" name="productCollection">
-                <option value="DISH" selected>Dish</option>
-                <option value="SALAD">Salad</option>
-                <option value="DESSERT">Dessert</option>
-                <option value="DRINK">Drink</option>
-                <option value="OTHER">Other</option>
-              </select>
-            </div>
-
-            <div class="half-input" id="product-collection">
-              <label>Dish Volume</label>
-              <select class="product-size" name="productSize">
-                <option value="SMALL">Small</option>
-                <option value="NORMAL" selected>Normal</option>
-                <option value="LARGE">Large</option>
-                <option value="SET">Set</option>
-              </select>
-            </div>
-
-            <div class="half-input" id="product-volume" style="display: none">
-              <label>Drink Volume</label>
-              <select class="product-volume" name="productVolume">
-                <option value="0.5">0,5 liters</option>
-                <option value="1" selected>1 liters</option>
-                <option value="1.2">1,2 liters</option>
-                <option value="1.5">1,5 liters</option>
-                <option value="2">2 liters</option>
-              </select>
-            </div>
-          </div>
-          <div class="long-input">
-            <label>Product Description</label>
-            <textarea name="productDesc" class="product-desc"></textarea>
-          </div>
-
-          <div class="img-frame">
-            <label>Product Images</label>
-            <div class="media-frame">
-              <div class="upload-img-box">
-                <img src="/img/upload.svg" class="1" id="image-section-1" />
-                <input
-                  type="file"
-                  id="file"
-                  name="productImages"
-                  class="image-one"
-                  onchange="previewFileHandler(this, 1)"
-                  
-                />
-              </div>
-              <div class="upload-img-box">
-                <img src="/img/upload.svg" class="2" id="image-section-2" />
-                <input
-                  type="file"
-                  id="file"
-                  name="productImages"
-                  class="image-two"                   onchange="previewFileHandler(this, 2)"
-
-                />
-              </div>
-              <div class="upload-img-box">
-                <img src="/img/upload.svg" class="3" id="image-section-3" />
-                <input
-                  type="file"
-                  id="file"
-                  name="productImages"
-                  class="image-three"                  onchange="previewFileHandler(this, 3)"
-
-                />
-              </div>
-              <div class="upload-img-box">
-                <img src="/img/upload.svg" class="4" id="image-section-4" />
-                <input
-                  type="file"
-                  id="file"
-                  name="productImages"
-                  class="image-four"                  onchange="previewFileHandler(this, 4)"
-
-                />
-              </div>
-              <div class="upload-img-box">
-                <img src="/img/upload.svg" class="5" id="image-section-5" />
-                <input
-                  type="file"
-                  id="file"
-                  name="productImages"
-                  class="image-five"                  onchange="previewFileHandler(this, 5)"
-
-                />
-              </div>
-              <input name="restaurantIid" class="restaurant-id" hidden />
-            </div>
-          </div>
-
-          <div class="operation-buttons">
-            <button type="button" class="btn btn-danger" id="cancel-btn">Cancel</button>
-            <button type="submit" class="btn btn-primary" id="create-btn">
-              Create
-            </button>
-          </div>
-        </form>
       </div>
+
+      <form class="book-form" id="book-form" action="/admin/product/create" method="POST" enctype="multipart/form-data">
+        <div class="form-header">
+          <h3><i class="fas fa-book-medical"></i> Add New Book</h3>
+          <button type="button" class="btn btn-close" id="close-form-btn">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+
+        <div class="form-grid">
+          <!-- Book Details -->
+          <div class="form-section">
+            <div class="form-group">
+              <label for="title"><i class="fas fa-heading"></i> Title *</label>
+              <input type="text" id="title" name="title" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+              <label for="author"><i class="fas fa-user-edit"></i> Author *</label>
+              <input type="text" id="author" name="author" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+              <label for="genre"><i class="fas fa-tags"></i> Genre *</label>
+              <select id="genre" name="genre" class="form-control" required>
+                <option value="FICTION">Fiction</option>
+                <option value="NON_FICTION">Non-Fiction</option>
+                <option value="SCIENCE_FICTION">Science Fiction</option>
+                <option value="FANTASY">Fantasy</option>
+                <option value="MYSTERY">Mystery</option>
+                <option value="ROMANCE">Romance</option>
+                <option value="HISTORICAL">Historical</option>
+                <option value="BIOGRAPHY">Biography</option>
+                <option value="SELF_HELP">Self Help</option>
+                <option value="CHILDREN">Children</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="description"><i class="fas fa-align-left"></i> Description</label>
+              <textarea id="description" name="description" class="form-control" rows="4"></textarea>
+            </div>
+          </div>
+
+          <!-- Inventory Details -->
+          <div class="form-section">
+            <div class="form-group">
+              <label for="price"><i class="fas fa-dollar-sign"></i> Price *</label>
+              <input type="number" id="price" name="price" class="form-control" step="0.01" min="0" required>
+            </div>
+
+            <div class="form-group">
+              <label for="stock"><i class="fas fa-boxes"></i> Stock Count *</label>
+              <input type="number" id="stock" name="stockCount" class="form-control" min="0" required>
+            </div>
+
+            <div class="form-group">
+              <label for="format"><i class="fas fa-bookmark"></i> Format</label>
+              <select id="format" name="format" class="form-control">
+                <option value="HARDCOVER">Hardcover</option>
+                <option value="PAPERBACK" selected>Paperback</option>
+                <option value="EBOOK">E-book</option>
+                <option value="AUDIO">Audiobook</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="pages"><i class="fas fa-file-alt"></i> Page Count</label>
+              <input type="number" id="pages" name="pageCount" class="form-control" min="1">
+            </div>
+          </div>
+
+          <!-- Image Upload -->
+          <div class="form-section full-width">
+  <div class="form-group">
+    <label><i class="fas fa-images"></i> Cover Images</label>
+    <div class="image-upload-grid">
+      <div class="image-upload-box">
+        <img src="/img/upload.jpg" class="preview-image" id="preview-1">
+        <input type="file" name="coverImages" accept="image/*" class="image-upload" data-preview-id="1">
+        <div class="upload-overlay"><i class="fas fa-camera"></i> Click to upload</div>
+      </div>
+      <div class="image-upload-box">
+        <img src="/img/upload.jpg" class="preview-image" id="preview-2">
+        <input type="file" name="coverImages" accept="image/*" class="image-upload" data-preview-id="2">
+        <div class="upload-overlay"><i class="fas fa-camera"></i> Click to upload</div>
+      </div>
+      <div class="image-upload-box">
+        <img src="/img/upload.jpg" class="preview-image" id="preview-3">
+        <input type="file" name="coverImages" accept="image/*" class="image-upload" data-preview-id="3">
+        <div class="upload-overlay"><i class="fas fa-camera"></i> Click to upload</div>
+      </div>
+      <div class="image-upload-box">
+        <img src="/img/upload.jpg" class="preview-image" id="preview-4">
+        <input type="file" name="coverImages" accept="image/*" class="image-upload" data-preview-id="4">
+        <div class="upload-overlay"><i class="fas fa-camera"></i> Click to upload</div>
+      </div>
+    </div>
+    <p class="upload-hint">Upload up to 4 cover images (JPEG, PNG, max 2MB each)</p>
+  </div>
+</div>
+        </div>
+
+        <div class="form-actions">
+          <button type="reset" class="btn btn-cancel">Reset</button>
+          <button type="submit" class="btn btn-submit">Save Book</button>
+        </div>
+      </form>
     </div>
   </div>
 

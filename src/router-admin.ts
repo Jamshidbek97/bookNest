@@ -26,16 +26,17 @@ routerAdmin.get("/check-me", adminController.checkAuthSession);
 /* BOOKS */
 routerAdmin.get(
   "/product/all",
+  //: FIXME:
   // adminController.verifyAdmin,
   productController.getAllProducts
 );
-// routerAdmin.post(
-//   "/product/create",
-//   adminController.verifyRestaurant,
-//   // uploadProductImage.single("productImage"),
-//   makeUploader("products").array("productImages", 5),
-//   adminController.createNewProduct
-// );
+routerAdmin.post(
+  "/product/create",
+  //:FIXME:
+  adminController.verifyAdmin,
+  makeUploader("products").array("coverImages", 5),
+  productController.createNewProduct
+);
 // routerAdmin.post(
 //   "/product/:id",
 //   adminController.verifyRestaurant,

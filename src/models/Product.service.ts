@@ -102,15 +102,24 @@ class ProductService {
     return result;
   }
 
-  //   public async createNewProduct(input: ProductInput): Promise<Product> {
-  //     try {
-  //       return await this.productModel.create(input);
-  //     } catch (err) {
-  //       console.error("Error, model:createNewProduct", err);
+  public async createNewProduct(input: BookInput): Promise<Book> {
+    try {
+      const created = await this.productModel.create(input);
+      const result = await this.productModel
+        .findById(created._id)
+        .lean()
+        .exec();
+      console.log("result,", result);
 
-  //       throw new Errors(HttpCode.BAD_REQUEST, Message.CREATE_FAILED);
-  //     }
-  //   }
+      if (!result)
+        throw new Errors(HttpCode.BAD_REQUEST, Message.CREATE_FAILED);
+      return result as unknown as Book;
+    } catch (err) {
+      console.error("Error, model:createNewProduct", err);
+
+      throw new Errors(HttpCode.BAD_REQUEST, Message.CREATE_FAILED);
+    }
+  }
 
   //   public async updateChosenProduct(
   //     id: string,

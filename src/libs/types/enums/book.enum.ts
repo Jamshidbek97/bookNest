@@ -1,14 +1,14 @@
 export enum BookGenre {
-  FICTION = "Fiction",
-  NON_FICTION = "Non-Fiction",
-  MYSTERY = "Mystery",
-  SCI_FI = "Science Fiction",
-  FANTASY = "Fantasy",
-  BIOGRAPHY = "Biography",
-  HISTORY = "History",
-  ROMANCE = "Romance",
-  SELF_HELP = "Self Help",
-  CHILDREN = "Children",
+  FICTION = "FICTION",
+  NON_FICTION = "NON_FICTION",
+  MYSTERY = "MYSTERY",
+  SCI_FI = "SCIENCE_FICTION",
+  FANTASY = "FANTASY",
+  BIOGRAPHY = "BIOGRAPHY",
+  HISTORY = "HISTORICAL",
+  ROMANCE = "ROMANCE",
+  SELF_HELP = "SELF_HELP",
+  CHILDREN = "CHILDREN",
 }
 
 export enum BookFormat {

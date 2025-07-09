@@ -1,92 +1,168 @@
-console.log("Products frontend javascript file");
+$(document).ready(function () {
+  // DOM Elements
+  const $addBookBtn = $("#add-book-btn");
+  const $bookForm = $("#book-form");
+  const $closeFormBtn = $("#close-form-btn");
+  const $imageUploads = $(".image-upload");
+  const $statusSelects = $(".status-select");
+  const $bookFormSubmit = $("#book-form");
 
-$(function () {
-  $(".product-collection").on("change", () => {
-    const selectedValue = $(".product-collection").val();
-    if (selectedValue === "DRINK") {
-      $("#product-collection").hide();
-      $("#product-volume").show();
-    } else {
-      $("#product-volume").hide();
-      $("#product-collection").show();
-    }
-  });
+  // Initialize form
+  initForm();
 
-  $("#process-btn").on("click", () => {
-    $(".dish-container").slideToggle(500);
-    $("#process-btn").css("display", "none");
-  });
+  // Event Listeners
+  $addBookBtn.on("click", showBookForm);
+  $closeFormBtn.on("click", hideBookForm);
+  $imageUploads.on("change", handleImageUpload);
+  $statusSelects.on("change", handleStatusChange);
+  $bookFormSubmit.on("submit", validateForm);
+  $bookForm.on("reset", resetForm);
 
-  $("#cancel-btn").on("click", () => {
-    $(".dish-container").slideUp(200);
-    $("#process-btn").css("display", "flex");
-  });
+  // Functions
+  function initForm() {
+    // Store initial status values
+    $statusSelects.each(function () {
+      $(this).data("previous-value", $(this).val());
+    });
 
-  $(".new-product-status").on("change", async function (e) {
-    const id = e.target.id;
-    const productStatus = $(`#${id}.new-product-status`).val();
-    console.log("ID: ", id);
-    console.log("Product status", productStatus);
-
-    try {
-      const response = await axios.post(`/admin/product/${id}`, {
-        productStatus: productStatus,
-      });
-      console.log("response", response);
-
-      const result = response.data;
-      if (result.data) {
-        console.log("Product updated");
-        $(".new-product-status").blur();
-      } else {
-        alert("Product Update Failed!");
+    // Make entire upload box clickable
+    $(".image-upload-box").on("click", function (e) {
+      if (!$(e.target).is("input")) {
+        $(this).find("input[type='file']").click();
       }
-    } catch (err) {
-      console.log("error product status", err);
-      alert("Product Update Failed!");
-    }
-  });
-});
+    });
+  }
 
-function validateForm() {
-  const productName = $(".product-name").val();
-  const productPrice = $(".product-price").val();
-  const productLeftCount = $(".product-left-count").val();
-  const productCollection = $(".product-collection").val();
-  const productDesc = $("product-desc").val();
-  const productStatus = $("product-status").val();
+  function showBookForm() {
+    $bookForm.slideDown(300);
+    $addBookBtn.hide();
+    $("html, body").animate(
+      {
+        scrollTop: $bookForm.offset().top - 20,
+      },
+      300
+    );
+  }
 
-  if (
-    productName === "" ||
-    productPrice === "" ||
-    productLeftCount === "" ||
-    productCollection === "" ||
-    productDesc === "" ||
-    productStatus === ""
-  ) {
-    alert("Please insert all details");
-    return false;
-  } else return true;
-}
+  function hideBookForm() {
+    $bookForm.slideUp(300);
+    $addBookBtn.show();
+  }
 
-function previewFileHandler(input, order) {
-  const imgClassName = input.className;
-  console.log(imgClassName);
+  function handleImageUpload() {
+    const previewId = $(this).data("preview-id");
+    const file = this.files[0];
+    const $preview = $(`#preview-${previewId}`);
 
-  const file = $(`.${imgClassName}`).get(0).files[0];
-  const fileType = file["type"];
-
-  const validImageType = ["image/jpg", "image/png", "image/jpeg"];
-
-  if (!validImageType.includes(fileType)) {
-    alert("Please insert only jpg, jpeg or png files");
-  } else {
     if (file) {
+      // Validate file type
+      const validTypes = ["image/jpeg", "image/png", "image/jpg", "image/webp"];
+      if (!validTypes.includes(file.type)) {
+        showToast("Please upload only JPEG, PNG or WebP images", "error");
+        return;
+      }
+
+      // Validate file size (2MB max)
+      if (file.size > 2 * 1024 * 1024) {
+        showToast("Image size should be less than 2MB", "error");
+        return;
+      }
+
+      // Preview image
       const reader = new FileReader();
-      reader.onload = function () {
-        $(`#image-section-${order}`).attr("src", reader.result);
+      reader.onload = function (e) {
+        $preview
+          .attr("src", e.target.result)
+          .addClass("uploaded-image")
+          .parent()
+          .addClass("has-image");
       };
       reader.readAsDataURL(file);
     }
   }
-}
+
+  async function handleStatusChange() {
+    const $select = $(this);
+    const bookId = $select.data("book-id");
+    const newStatus = $select.val();
+    const previousValue = $select.data("previous-value");
+
+    try {
+      const response = await axios.post(`/admin/product/${bookId}`, {
+        productStatus: newStatus,
+      });
+
+      if (response.data.success) {
+        showToast("Book status updated successfully", "success");
+        $select.data("previous-value", newStatus);
+      } else {
+        showToast("Failed to update book status", "error");
+        $select.val(previousValue);
+      }
+    } catch (error) {
+      console.error("Error updating book status:", error);
+      showToast("Error updating book status", "error");
+      $select.val(previousValue);
+    }
+  }
+
+  function validateForm(e) {
+    const requiredFields = ["#title", "#author", "#genre", "#price", "#stock"];
+    let isValid = true;
+
+    // Validate required fields
+    requiredFields.forEach((field) => {
+      const $field = $(field);
+      if (!$field.val()) {
+        $field.addClass("error");
+        isValid = false;
+      } else {
+        $field.removeClass("error");
+      }
+    });
+
+    // Validate at least one image is uploaded
+    if ($(".has-image").length === 0) {
+      showToast("Please upload at least one cover image", "error");
+      isValid = false;
+    }
+
+    if (!isValid) {
+      e.preventDefault();
+      $("html, body").animate(
+        {
+          scrollTop: $(".error").first().offset().top - 20,
+        },
+        300
+      );
+    }
+  }
+
+  function resetForm() {
+    // Reset image previews
+    $(".preview-image").each(function () {
+      $(this)
+        .attr("src", "/img/upload.jpg")
+        .removeClass("uploaded-image")
+        .parent()
+        .removeClass("has-image");
+    });
+
+    // Clear file inputs
+    $(".image-upload").val("");
+  }
+
+  function showToast(message, type) {
+    const toast = $(`<div class="toast ${type}">${message}</div>`);
+    $("body").append(toast);
+
+    setTimeout(() => {
+      toast.addClass("show");
+    }, 100);
+
+    setTimeout(() => {
+      toast.removeClass("show");
+      setTimeout(() => toast.remove(), 300);
+    }, 3000);
+  }
+});
