@@ -19,7 +19,39 @@ routerAdmin
     adminController.processSignup
   );
 
-/** BOOKS */
+// routerAdmin.get("/logout", adminController.logout);
+// routerAdmin.get("/check-me", adminController.checkAuthSession);
 
-/** USER */
+// /* BOOKS */
+// routerAdmin.get(
+//   "/product/all",
+//   adminController.verifyRestaurant
+//   // productController.getAllProducts
+// );
+// routerAdmin.post(
+//   "/product/create",
+//   adminController.verifyRestaurant,
+//   // uploadProductImage.single("productImage"),
+//   makeUploader("products").array("productImages", 5),
+//   adminController.createNewProduct
+// );
+// routerAdmin.post(
+//   "/product/:id",
+//   adminController.verifyRestaurant,
+//   adminController.updateChosenProduct
+// );
+
+// /* users */
+// routerAdmin.get(
+//   "/user/all",
+//   adminController.verifyRestaurant,
+//   adminController.getUsers
+// );
+
+// routerAdmin.post(
+//   "/user/edit",
+//   adminController.verifyRestaurant,
+//   adminController.updateChosenUser
+// );
+
 export default routerAdmin;

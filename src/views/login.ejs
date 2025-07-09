@@ -1,45 +1,86 @@
 <%- include('includes/header') %>
 
 <link rel="stylesheet" type="text/css" href="/css/login.css" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+/>
+
 <body>
-  <form class="login-container" action="/admin/login" METHOD="POST">
+  <div class="background-container">
+    <div class="book-background"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+  </div>
+
+  <form class="login-container" action="/admin/login" method="POST">
     <div class="login-frame">
       <div class="login-top">
-        <span>Enter</span>
-        <div>Go back <a href="/admin" style="color: #6440fb">Home</a></div>
-        <p>
-          Not registered yet?
-          <a href="/admin/signup" style="color: #6440fb">Signup</a>
-        </p>
+        <h2><i class="fas fa-book-open"></i> Admin Login</h2>
+        <div class="navigation-links">
+          <a href="/admin"><i class="fas fa-arrow-left"></i> Back to Home</a>
+          <span
+            >Not registered? <a href="/admin/signup">Create account</a></span
+          >
+        </div>
       </div>
+
       <div class="login-input-frame">
         <div class="login-input-container">
-          <label>Restaurant *</label>
+          <label><i class="fas fa-user-shield"></i> Admin *</label>
           <input
             type="text"
-            name="memberNick"
+            name="identifier"
             class="member-nick"
-            placeholder="Username"
-            value=""
+            placeholder="Username, Phone or Email"
             required
           />
         </div>
+
         <div class="login-input-container">
-          <label>Password *</label>
-          <input
-            type="password"
-            name="memberPassword"
-            class="member-password"
-            placeholder="Password"
-            value=""
-            required
-          />
+          <label><i class="fas fa-lock"></i> Password *</label>
+          <div class="password-wrapper">
+            <input
+              type="password"
+              name="memberPassword"
+              class="member-password"
+              placeholder="Password"
+              required
+            />
+            <i
+              class="fas fa-eye toggle-password"
+              onclick="togglePassword(this)"
+            ></i>
+          </div>
         </div>
       </div>
-      <button class="login-btn btn" name="login" type="submit">Login</button>
+
+      <button class="login-btn btn" name="login" type="submit">
+        <i class="fas fa-sign-in-alt"></i> Login
+      </button>
     </div>
   </form>
+
+  <script>
+    function togglePassword(icon) {
+      const passwordInput = icon.previousElementSibling;
+      if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        icon.classList.replace("fa-eye", "fa-eye-slash");
+      } else {
+        passwordInput.type = "password";
+        icon.classList.replace("fa-eye-slash", "fa-eye");
+      }
+    }
+  </script>
 </body>
 
 <%- include('includes/footer') %>
