@@ -164,18 +164,22 @@ class MemberService {
     if (!member) {
       throw new Errors(HttpCode.NOT_FOUND, Message.MEMBER_NOT_FOUND);
     }
-    console.log(member.memberPassword, input.memberPassword);
 
     const isMatch = await bcrypt.compare(
       input.memberPassword,
       member.memberPassword
     );
+
     if (!isMatch) {
       throw new Errors(HttpCode.UNAUTHORIZED, Message.INVALID_PASSWORD);
     }
 
     const result = await this.memberModel.findById(member._id).exec();
-    return result as unknown as Member;
+
+    if (!result) {
+      throw new Errors(HttpCode.NOT_FOUND, Message.MEMBER_NOT_FOUND);
+    }
+    return result.toObject() as Member;
   }
 
   public async getUsers(): Promise<Member[]> {

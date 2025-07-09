@@ -27,7 +27,7 @@ routerAdmin.get("/check-me", adminController.checkAuthSession);
 routerAdmin.get(
   "/product/all",
   //: FIXME:
-  // adminController.verifyAdmin,
+  adminController.verifyAdmin,
   productController.getAllProducts
 );
 routerAdmin.post(

@@ -49,7 +49,7 @@ adminController.processSignup = async (req: AdminRequest, res: Response) => {
 
     const result = await memberService.processSignup(newMember);
 
-    req.session.member = result;
+    req.session.member = JSON.parse(JSON.stringify(result));
     req.session.save(function () {
       res.redirect("/admin/product/all");
     });
@@ -69,13 +69,19 @@ adminController.processSignup = async (req: AdminRequest, res: Response) => {
 adminController.processLogin = async (req: AdminRequest, res: Response) => {
   try {
     console.log("processLogin");
-    console.log("req.body", req.body);
 
     const input: LoginInput = req.body,
       result = await memberService.processLogin(input);
 
     req.session.member = result;
-    req.session.save(function () {
+
+    req.session.member = JSON.parse(JSON.stringify(result));
+    req.session.save((err) => {
+      if (err) {
+        console.log("Session save error:", err);
+        res.redirect("/admin/product/all");
+      }
+      console.log("Session saved successfully");
       res.redirect("/admin/product/all");
     });
   } catch (error) {
@@ -129,6 +135,7 @@ adminController.updateChosenUser = async (req: Request, res: Response) => {
 adminController.checkAuthSession = async (req: AdminRequest, res: Response) => {
   try {
     console.log("Check Authentication session");
+    console.log("req.session", req.session);
 
     if (req.session?.member)
       res.send(
@@ -136,7 +143,7 @@ adminController.checkAuthSession = async (req: AdminRequest, res: Response) => {
       );
     else res.send(`<script> alert("${Message.NOT_AUTHENTICATED}") </script>`);
   } catch (err) {
-    console.log("Error, Process Login:", err);
+    console.log("Error, Check auth session Login:", err);
     res.send(err);
   }
 };
@@ -146,7 +153,6 @@ adminController.verifyAdmin = (
   res: Response,
   next: NextFunction
 ) => {
-  console.log("req:", req.session.member);
   if (req.session?.member?.memberType === MemberType.ADMIN) {
     req.member = req.session.member;
     console.log(req.member);

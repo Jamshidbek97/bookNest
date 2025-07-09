@@ -40,7 +40,6 @@ app.use(
     },
     store: store,
     resave: true,
-    // secure: false
     saveUninitialized: true,
   })
 );
