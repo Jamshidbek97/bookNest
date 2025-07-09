@@ -12,16 +12,16 @@ export enum BookGenre {
 }
 
 export enum BookFormat {
-  HARDCOVER = "Hardcover",
-  PAPERBACK = "Paperback",
-  EBOOK = "eBook",
-  AUDIOBOOK = "Audiobook",
+  HARDCOVER = "HARDCOVER",
+  PAPERBACK = "PAPERBACK",
+  EBOOK = "EBOOK",
+  AUDIOBOOK = "AUDIOBOOK",
 }
 
 export enum BookStatus {
-  AVAILABLE = "Available",
-  PAUSE = "Pause",
-  OUT_OF_STOCK = "Out of Stock",
-  DISCONTINUED = "Discontinued",
-  PREORDER = "Preorder",
+  AVAILABLE = "AVAILABLE",
+  ARCHIVED = "ARCHIVED",
+  OUT_OF_STOCK = "OUT_OF_STOCK",
+  DISCONTINUED = "DISCONTINUED",
+  PREORDER = "PREORDER",
 }

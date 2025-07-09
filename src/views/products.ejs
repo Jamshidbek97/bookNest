@@ -78,9 +78,11 @@
                 </td>
                 <td>
                   <select class="status-select" data-book-id="<%= book._id %>">
-                    <option value="ACTIVE" <%= book.status === 'ACTIVE' ? 'selected' : '' %>>Active</option>
+                    <option value="AVAILABLE" <%= book.status === 'AVAILABLE' ? 'selected' : '' %>>Available</option>
                     <option value="OUT_OF_STOCK" <%= book.status === 'OUT_OF_STOCK' ? 'selected' : '' %>>Out of Stock</option>
                     <option value="ARCHIVED" <%= book.status === 'ARCHIVED' ? 'selected' : '' %>>Archived</option>
+                    <option value="DISCONTINUED" <%= book.status === 'DISCONTINUED' ? 'selected' : '' %>>Discontinued</option>
+                    <option value="PREORDER" <%= book.status === 'PREORDER' ? 'selected' : '' %>>Preorder</option>
                   </select>
                 </td>
               </tr>

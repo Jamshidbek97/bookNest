@@ -22,7 +22,7 @@ const bookSchema = new Schema(
     status: {
       type: String,
       enum: BookStatus,
-      default: BookStatus.PAUSE,
+      default: BookStatus.ARCHIVED,
     },
 
     genre: {

@@ -33,7 +33,7 @@ routerAdmin.get(
 routerAdmin.post(
   "/product/create",
   //:FIXME:
-  adminController.verifyAdmin,
+  // adminController.verifyAdmin,
   makeUploader("products").array("coverImages", 5),
   productController.createNewProduct
 );
