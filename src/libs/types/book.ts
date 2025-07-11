@@ -7,11 +7,12 @@ export interface Book {
   author: string;
   genre: BookGenre;
   price: number;
-  stockCount: number;
+  stockCount?: number;
   format?: BookFormat;
   pageCount?: number;
   description?: string;
   coverImages?: string[];
+  duration?: string;
   timesBorrowed?: number;
   bookViews: number;
   bookLikes: number;

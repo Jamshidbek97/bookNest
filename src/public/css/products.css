@@ -320,9 +320,15 @@ body {
   gap: 10px;
 }
 
-.form-grid {
+.display-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  gap: 40px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 2fr;
   gap: 20px;
 }
 

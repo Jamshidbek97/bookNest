@@ -38,7 +38,6 @@ const bookSchema = new Schema(
 
     stockCount: {
       type: Number,
-      required: true,
     },
 
     format: {
@@ -64,7 +63,15 @@ const bookSchema = new Schema(
       default: [],
     },
 
-    BookViews: {
+    bookViews: {
+      type: Number,
+      default: 0,
+    },
+    duration: {
+      type: String,
+      default: "0",
+    },
+    bookLikes: {
       type: Number,
       default: 0,
     },

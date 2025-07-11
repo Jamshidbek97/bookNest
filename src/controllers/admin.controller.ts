@@ -155,7 +155,6 @@ adminController.verifyAdmin = (
 ) => {
   if (req.session?.member?.memberType === MemberType.ADMIN) {
     req.member = req.session.member;
-    console.log(req.member);
 
     next();
   } else {

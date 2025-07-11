@@ -1,27 +1,34 @@
 $(document).ready(function () {
-  // DOM Elements
-  const $addBookBtn = $("#add-book-btn");
-  const $bookForm = $("#book-form");
-  const $closeFormBtn = $("#close-form-btn");
-  const $imageUploads = $(".image-upload");
-  const $statusSelects = $(".status-select");
-  const $bookFormSubmit = $("#book-form");
+  // Initialize form fields based on format
+  function updateFormFields(format) {
+    // Handle page count/duration toggle
+    if (format === "AUDIO") {
+      $("#pageCountGroup").hide();
+      $("#durationGroup").show();
+      $("#pages").val(""); // Clear page count
+    } else {
+      $("#pageCountGroup").show();
+      $("#durationGroup").hide();
+      $("#duration").val(""); // Clear duration
+    }
+
+    // Handle stock logic
+    if (format === "EBOOK" || format === "AUDIO") {
+      $("#stock").val("9999").prop("disabled", true);
+      $("#digitalStockNote").show();
+    } else {
+      $("#stock").val("").prop("disabled", false);
+      $("#digitalStockNote").hide();
+    }
+  }
 
   // Initialize form
-  initForm();
-
-  // Event Listeners
-  $addBookBtn.on("click", showBookForm);
-  $closeFormBtn.on("click", hideBookForm);
-  $imageUploads.on("change", handleImageUpload);
-  $statusSelects.on("change", handleStatusChange);
-  $bookFormSubmit.on("submit", validateForm);
-  $bookForm.on("reset", resetForm);
-
-  // Functions
   function initForm() {
+    // Set initial format state
+    updateFormFields($("#format").val());
+
     // Store initial status values
-    $statusSelects.each(function () {
+    $(".status-select").each(function () {
       $(this).data("previous-value", $(this).val());
     });
 
@@ -33,42 +40,41 @@ $(document).ready(function () {
     });
   }
 
+  // Show/hide book form
   function showBookForm() {
-    $bookForm.slideDown(300);
-    $addBookBtn.hide();
+    $("#book-form").slideDown(300);
+    $("#add-book-btn").hide();
     $("html, body").animate(
       {
-        scrollTop: $bookForm.offset().top - 20,
+        scrollTop: $("#book-form").offset().top - 20,
       },
       300
     );
   }
 
   function hideBookForm() {
-    $bookForm.slideUp(300);
-    $addBookBtn.show();
+    $("#book-form").slideUp(300);
+    $("#add-book-btn").show();
   }
 
+  // Handle image upload preview
   function handleImageUpload() {
     const previewId = $(this).data("preview-id");
     const file = this.files[0];
     const $preview = $(`#preview-${previewId}`);
 
     if (file) {
-      // Validate file type
       const validTypes = ["image/jpeg", "image/png", "image/jpg", "image/webp"];
       if (!validTypes.includes(file.type)) {
         showToast("Please upload only JPEG, PNG or WebP images", "error");
         return;
       }
 
-      // Validate file size (2MB max)
       if (file.size > 2 * 1024 * 1024) {
         showToast("Image size should be less than 2MB", "error");
         return;
       }
 
-      // Preview image
       const reader = new FileReader();
       reader.onload = function (e) {
         $preview
@@ -81,6 +87,7 @@ $(document).ready(function () {
     }
   }
 
+  // Handle book status changes
   async function handleStatusChange() {
     const $select = $(this);
     const bookId = $select.data("book-id");
@@ -106,11 +113,11 @@ $(document).ready(function () {
     }
   }
 
+  // Validate form before submission
   function validateForm(e) {
     const requiredFields = ["#title", "#author", "#genre", "#price", "#stock"];
     let isValid = true;
 
-    // Validate required fields
     requiredFields.forEach((field) => {
       const $field = $(field);
       if (!$field.val()) {
@@ -121,7 +128,6 @@ $(document).ready(function () {
       }
     });
 
-    // Validate at least one image is uploaded
     if ($(".has-image").length === 0) {
       showToast("Please upload at least one cover image", "error");
       isValid = false;
@@ -138,8 +144,8 @@ $(document).ready(function () {
     }
   }
 
+  // Reset form fields
   function resetForm() {
-    // Reset image previews
     $(".preview-image").each(function () {
       $(this)
         .attr("src", "/img/upload.jpg")
@@ -147,22 +153,34 @@ $(document).ready(function () {
         .parent()
         .removeClass("has-image");
     });
-
-    // Clear file inputs
     $(".image-upload").val("");
+    updateFormFields($("#format").val()); // Reset format-based fields
   }
 
+  // Show toast notifications
   function showToast(message, type) {
     const toast = $(`<div class="toast ${type}">${message}</div>`);
     $("body").append(toast);
 
-    setTimeout(() => {
-      toast.addClass("show");
-    }, 100);
-
+    setTimeout(() => toast.addClass("show"), 100);
     setTimeout(() => {
       toast.removeClass("show");
       setTimeout(() => toast.remove(), 300);
     }, 3000);
   }
+
+  // Initialize everything when page loads
+  initForm();
+
+  // Set up event listeners
+  $("#format").on("change", function () {
+    updateFormFields($(this).val());
+  });
+
+  $("#add-book-btn").on("click", showBookForm);
+  $("#close-form-btn").on("click", hideBookForm);
+  $(".image-upload").on("change", handleImageUpload);
+  $(".status-select").on("change", handleStatusChange);
+  $("#book-form").on("submit", validateForm);
+  $("#book-form").on("reset", resetForm);
 });
