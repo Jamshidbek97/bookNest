@@ -93,10 +93,10 @@ class OrderService {
         },
         {
           $lookup: {
-            from: "products",
+            from: "books",
             localField: "orderItems.productId",
             foreignField: "_id",
-            as: "productData",
+            as: "bookData",
           },
         },
       ])
@@ -105,31 +105,31 @@ class OrderService {
     return result;
   }
 
-  public async updateOrder(
-    member: Member,
-    input: OrderUpdateInput
-  ): Promise<Order> {
-    const memberId = shapeIntoMongooseObjectId(member._id),
-      orderId = shapeIntoMongooseObjectId(input.orderId),
-      orderStatus = input.orderStatus,
-      result = await this.orderModel
-        .findOneAndUpdate(
-          {
-            memberId: memberId,
-            _id: orderId,
-          },
-          { orderStatus: orderStatus },
-          { new: true }
-        )
-        .exec();
+  //   public async updateOrder(
+  //     member: Member,
+  //     input: OrderUpdateInput
+  //   ): Promise<Order> {
+  //     const memberId = shapeIntoMongooseObjectId(member._id),
+  //       orderId = shapeIntoMongooseObjectId(input.orderId),
+  //       orderStatus = input.orderStatus,
+  //       result = await this.orderModel
+  //         .findOneAndUpdate(
+  //           {
+  //             memberId: memberId,
+  //             _id: orderId,
+  //           },
+  //           { orderStatus: orderStatus },
+  //           { new: true }
+  //         )
+  //         .exec();
 
-    if (!result) throw new Errors(HttpCode.NOT_MODIFIED, Message.UPDATE_FAILED);
-    if (orderStatus === OrderStatus.PROCESS) {
-      await this.memberService.addUserPoint(member, 1);
-    }
+  //     if (!result) throw new Errors(HttpCode.NOT_MODIFIED, Message.UPDATE_FAILED);
+  //     if (orderStatus === OrderStatus.PROCESS) {
+  //       await this.memberService.addUserPoint(member, 1);
+  //     }
 
-    return result.toJSON() as Order;
-  }
+  //     return result.toJSON() as Order;
+  //   }
 }
 
 export default OrderService;
