@@ -96,10 +96,11 @@ $(document).ready(function () {
 
     try {
       const response = await axios.post(`/admin/product/${bookId}`, {
-        productStatus: newStatus,
+        status: newStatus,
       });
+      console.log("response", response);
 
-      if (response.data.success) {
+      if (response.data) {
         showToast("Book status updated successfully", "success");
         $select.data("previous-value", newStatus);
       } else {

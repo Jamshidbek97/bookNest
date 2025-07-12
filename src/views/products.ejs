@@ -109,17 +109,14 @@
                   </div>
                 </td>
                 <td>
-                  <select class="status-select" data-book-id="<%= book._id %>">
-                    <% const statuses = ['AVAILABLE', 'OUT_OF_STOCK',
-                    'ARCHIVED', 'DISCONTINUED', 'PREORDER']; %> <%
-                    statuses.forEach(status => { %> <% const selected =
-                    book.status === status ? 'selected' : ''; %>
-                    <option value="<%= status %>" <%="selected" %>
-                      ><%= status.replace(/_/g, ' ') %>
-                    </option>
-                    <% }); %>
-                  </select>
-                </td>
+  <select class="status-select" data-book-id="<%= book._id %>">
+    <option value="AVAILABLE" <%= book.status === 'AVAILABLE' ? 'selected' : '' %> >AVAILABLE</option>
+    <option value="OUT_OF_STOCK" <%= book.status === 'OUT_OF_STOCK' ? 'selected' : '' %>>OUT OF STOCK</option>
+    <option value="ARCHIVED" <%= book.status === 'ARCHIVED' ? 'selected' : '' %>>ARCHIVED</option>
+    <option value="DISCONTINUED" <%= book.status === 'DISCONTINUED' ? 'selected' : '' %>>DISCONTINUED</option>
+    <option value="PREORDER" <%= book.status === 'PREORDER' ? 'selected' : '' %>>PREORDER</option>
+  </select>
+</td>
               </tr>
               <% }) %>
             </tbody>

@@ -130,6 +130,8 @@ class ProductService {
       .findByIdAndUpdate({ _id: id }, input, { new: true })
       .exec();
 
+    // console.log(result);
+
     if (!result) throw new Errors(HttpCode.NOT_MODIFIED, Message.UPDATE_FAILED);
 
     return result.toJSON() as Book;
