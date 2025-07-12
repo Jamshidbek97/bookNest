@@ -10,17 +10,17 @@ import {
 import BookModel from "../schema/Book.model";
 import { T } from "../libs/types/common";
 import { ObjectId } from "mongoose";
-// import ViewService from "./View.service";
-// import { ViewInput } from "../libs/types/view";
-// import { ViewGroup } from "../libs/types/enums/view.enum";
+import ViewService from "./View.service";
+import { ViewInput } from "../libs/types/view";
+import { ViewGroup } from "../libs/types/enums/view.enum";
 
 class ProductService {
   private readonly productModel;
-  //   public viewService;
+  public viewService;
 
   constructor() {
     this.productModel = BookModel;
-    // this.viewService = new ViewService();
+    this.viewService = new ViewService();
   }
 
   /* SPA  */
@@ -49,46 +49,46 @@ class ProductService {
     return result;
   }
 
-  //   public async getProduct(
-  //     memberId: ObjectId | null,
-  //     id: string
-  //   ): Promise<Product> {
-  //     const productId = shapeIntoMongooseObjectId(id);
+  public async getProduct(
+    memberId: ObjectId | null,
+    id: string
+  ): Promise<Book> {
+    const productId = shapeIntoMongooseObjectId(id);
 
-  //     let result = await this.productModel
-  //       .findOne({ _id: productId, productStatus: ProductStatus.PROCESS })
-  //       .exec();
+    let result = await this.productModel
+      .findOne({
+        _id: productId,
+        status: { $in: [BookStatus.AVAILABLE, BookStatus.PREORDER] },
+      })
+      .exec();
 
-  //     if (!result) throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
+    if (!result)
+      throw new Errors(HttpCode.NOT_FOUND, Message.PRODUCT_NOT_FOUND);
 
-  //     if (memberId) {
-  //       // Check view log existence
-  //       const input: ViewInput = {
-  //         memberId: memberId,
-  //         viewRefId: productId,
-  //         viewGroup: ViewGroup.Product,
-  //       };
-  //       const existView = await this.viewService.checkViewExistence(input);
+    if (memberId) {
+      const input: ViewInput = {
+        memberId: memberId,
+        viewRefId: productId,
+        viewGroup: ViewGroup.PRODUCT,
+      };
+      const existView = await this.viewService.checkViewExistence(input);
 
-  //       if (!existView) {
-  //         // Insert new view log
-  //         console.log("Planning to insert new view");
-  //         await this.viewService.insertMemberView(input);
-  //         // Increase target view
-  //         result = await this.productModel
-  //           .findByIdAndUpdate(
-  //             productId,
-  //             { $inc: { productViews: +1 } },
-  //             { new: true }
-  //           )
-  //           .exec();
-  //       }
-  //     }
+      if (!existView) {
+        await this.viewService.insertMemberView(input);
+        result = await this.productModel
+          .findByIdAndUpdate(
+            productId,
+            { $inc: { productViews: +1 } },
+            { new: true }
+          )
+          .exec();
+      }
+    }
 
-  //     return result;
-  //   }
+    return result?.toJSON() as Book;
+  }
 
-  //   /* SSR  */
+  /* SSR  */
 
   public async getAllProducts(): Promise<Book[]> {
     const result = (await this.productModel
@@ -109,7 +109,6 @@ class ProductService {
         .findById(created._id)
         .lean()
         .exec();
-      console.log("result,", result);
 
       if (!result)
         throw new Errors(HttpCode.BAD_REQUEST, Message.CREATE_FAILED);
@@ -129,8 +128,6 @@ class ProductService {
     const result = await this.productModel
       .findByIdAndUpdate({ _id: id }, input, { new: true })
       .exec();
-
-    // console.log(result);
 
     if (!result) throw new Errors(HttpCode.NOT_MODIFIED, Message.UPDATE_FAILED);
 

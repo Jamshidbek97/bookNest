@@ -1,11 +1,12 @@
 import mongoose from "mongoose";
-import { BookGenre, BookFormat } from "./enums/book.enum";
+import { BookGenre, BookFormat, BookStatus } from "./enums/book.enum";
 
 export interface Book {
   _id: mongoose.Types.ObjectId;
   title: string;
   author: string;
   genre: BookGenre;
+  status: BookStatus;
   price: number;
   stockCount?: number;
   format?: BookFormat;
