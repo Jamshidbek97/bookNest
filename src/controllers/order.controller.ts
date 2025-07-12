@@ -13,7 +13,6 @@ const orderController: T = {};
 orderController.createOrder = async (req: ExtendedRequest, res: Response) => {
   try {
     console.log("Create Order");
-
     const result = await orderService.createOrder(req.member, req.body);
 
     res.status(HttpCode.CREATED).json(result);
@@ -33,8 +32,6 @@ orderController.getMyOrders = async (req: ExtendedRequest, res: Response) => {
       limit: Number(limit),
       orderStatus: orderStatus as OrderStatus,
     };
-
-    console.log("inquiry", inquiry);
 
     const result = await orderService.getMyOrders(req.member, inquiry);
 
