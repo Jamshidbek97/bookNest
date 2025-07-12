@@ -123,7 +123,12 @@ adminController.getUsers = async (req: Request, res: Response) => {
 adminController.updateChosenUser = async (req: Request, res: Response) => {
   try {
     console.log("Update chosen user");
-    const result = await memberService.updateChosenUser(req.body);
+    const userId = req.params.id;
+
+    const result = await memberService.updateChosenUser({
+      ...req.body,
+      _id: userId,
+    });
     res.status(HttpCode.OK).json({ data: result });
   } catch (err) {
     console.log("Error, update chosen user", err);
@@ -135,7 +140,6 @@ adminController.updateChosenUser = async (req: Request, res: Response) => {
 adminController.checkAuthSession = async (req: AdminRequest, res: Response) => {
   try {
     console.log("Check Authentication session");
-    console.log("req.session", req.session);
 
     if (req.session?.member)
       res.send(
