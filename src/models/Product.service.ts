@@ -25,7 +25,9 @@ class ProductService {
 
   /* SPA  */
   public async getProducts(inquiry: BookInquiry): Promise<Book[]> {
-    const match: T = { BookStatus: BookStatus.AVAILABLE };
+    const match: T = {
+      status: { $in: [BookStatus.AVAILABLE, BookStatus.PREORDER] },
+    };
     if (inquiry.genre) match.genre = inquiry.genre;
 
     if (inquiry.search) {
