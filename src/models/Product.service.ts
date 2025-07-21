@@ -31,7 +31,11 @@ class ProductService {
     if (inquiry.genre) match.genre = inquiry.genre;
 
     if (inquiry.search) {
-      match.productName = { $regex: new RegExp(inquiry.search, "i") };
+      match.$or = [
+        { title: { $regex: inquiry.search, $options: "i" } },
+        { author: { $regex: inquiry.search, $options: "i" } },
+        { description: { $regex: inquiry.search, $options: "i" } },
+      ];
     }
 
     const sortKey = inquiry.order ?? "price";

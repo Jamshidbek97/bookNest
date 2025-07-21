@@ -13,7 +13,7 @@ const productController: T = {};
 productController.getProducts = async (req: Request, res: Response) => {
   try {
     console.log(" Get products");
-    const { page, limit, order, bookGenre, search } = req.query;
+    const { page, limit, order, genre, search } = req.query;
     console.log("Query", req.query);
 
     const inquiry: BookInquiry = {
@@ -22,7 +22,7 @@ productController.getProducts = async (req: Request, res: Response) => {
       limit: Number(limit) || 8,
     };
 
-    if (bookGenre) inquiry.genre = bookGenre as BookGenre;
+    if (genre) inquiry.genre = genre as BookGenre;
 
     if (search) inquiry.search = String(search);
 
