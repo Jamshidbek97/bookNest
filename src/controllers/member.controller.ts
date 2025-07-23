@@ -31,7 +31,17 @@ memberController.getAdmin = async (req: Request, res: Response) => {
 memberController.signup = async (req: Request, res: Response) => {
   try {
     console.log("signup");
-    const input: MemberInput = req.body;
+    console.log("req.body:", req.body);
+    console.log("req.file:", req.file);
+    const input: MemberInput = {
+      memberNick: req.body.memberNick,
+      memberPhone: req.body.memberPhone,
+      memberEmail: req.body.memberEmail,
+      memberPassword: req.body.memberPassword,
+      memberImage: req.file?.filename || "",
+    };
+    console.log("input", input);
+
     const result: Member = await memberService.signup(input);
     const token = await authService.createToken(result);
     res.cookie("accessToken", token, {
@@ -101,8 +111,11 @@ memberController.updateMember = async (req: ExtendedRequest, res: Response) => {
   try {
     console.log("UpdateMember");
     const input: MemberUpdateInput = req.body;
+    if (input.memberPassword === "") {
+      delete input.memberPassword;
+    }
 
-    if (req.file) input.memberImage = req.file.path.replace(/\\/g, "/");
+    if (req.file) input.memberImage = req.file.filename;
 
     const result = await memberService.updateMember(req.member, input);
 

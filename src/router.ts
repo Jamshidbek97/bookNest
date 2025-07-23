@@ -9,7 +9,11 @@ const router = express.Router();
 /********** Member ***********/
 router.get("/member/admin", memberController.getAdmin);
 
-router.post("/member/signup", memberController.signup);
+router.post(
+  "/member/signup",
+  makeUploader("members").single("memberImage"),
+  memberController.signup
+);
 router.post("/member/login", memberController.login);
 router.post(
   "/member/logout",
