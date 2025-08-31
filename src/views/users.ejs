@@ -1,0 +1,130 @@
+<%- include('includes/header') %>
+
+<link rel="stylesheet" type="text/css" href="/css/users.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<body>
+  <div class="admin-container">
+    <!-- Particles Background -->
+    <div id="particles-js"></div>
+    
+    <% if(!member) { %>
+      <!-- Unauthenticated View -->
+      <nav class="glass-nav">
+        <div class="nav-brand">
+          <i class="fas fa-user-shield"></i>
+          <span>Admin Portal</span>
+        </div>
+        <ul class="nav-links">
+          <li><a href="/admin" class="active"><i class="fas fa-home"></i> Home</a></li>
+          <li><a href="/admin/signup"><i class="fas fa-user-plus"></i> Sign Up</a></li>
+          <li><a href="/admin/login"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+        </ul>
+      </nav>
+
+      <div class="auth-required-message">
+        <div class="message-box">
+          <i class="fas fa-lock"></i>
+          <h2>Authentication Required</h2>
+          <p>Please login to access the user management system</p>
+          <div class="auth-actions">
+            <a href="/admin/login" class="btn btn-primary">
+              <i class="fas fa-sign-in-alt"></i> Login
+            </a>
+            <a href="/admin/signup" class="btn btn-secondary">
+              <i class="fas fa-user-plus"></i> Create Account
+            </a>
+          </div>
+        </div>
+      </div>
+
+    <% } else { %>
+      <!-- Authenticated View -->
+      <nav class="glass-nav">
+        <div class="nav-brand">
+          <i class="fas fa-user-shield"></i>
+          <span>User Management</span>
+        </div>
+        <ul class="nav-links">
+          <li><a href="/admin"><i class="fas fa-home"></i> Home</a></li>
+          <li><a href="/admin/product/all"><i class="fas fa-book"></i> Books</a></li>
+          <li><a href="/admin/user/all" class="active"><i class="fas fa-users"></i> Users</a></li>
+          <li>
+            <a href="/admin/logout" onclick="return confirm('Do you really want to logout?')">
+              <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="users-dashboard">
+        <div class="dashboard-header">
+          <h1><i class="fas fa-users-cog"></i> User Management</h1>
+          <div class="user-count">
+            <i class="fas fa-user-friends"></i>
+            <span>Total Users: <%= users.length %></span>
+          </div>
+        </div>
+
+        <div class="users-table-container">
+          <table class="users-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th><i class="fas fa-user"></i> User</th>
+                <th><i class="fas fa-phone"></i> Phone</th>
+                <th><i class="fas fa-calendar-day"></i> Joined</th>
+                <th><i class="fas fa-calendar-day"></i> Points</th>
+
+                <th><i class="fas fa-user-cog"></i> Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% users.map(function(user, index) { %>
+                <tr class="user-row <%= user.memberStatus.toLowerCase() %>">
+                  <td><%= index + 1 %></td>
+                  <td class="user-info">
+                    <div class="user-avatar">
+                      <i class="fas fa-user-circle"></i>
+                    </div>
+                    <div class="user-details">
+                      <span class="username"><%= user.memberNick %></span>
+                      <span class="user-email"><%= user.memberEmail %></span>
+                    </div>
+                  </td>
+                  <td><%= user.memberPhone || 'N/A' %></td>
+                  <td>
+                    <%= new Date(user.createdAt).toLocaleDateString() %>
+                  </td>
+                   <td>
+                  <div class="popularity-indicator">
+                    
+                    <span class="likes" title="Likes"
+                      ><i class="fas fa-heart"></i> <%= member.memberPoints || 0
+                      %></span
+                    >
+                   
+                  </div>
+                </td>
+                  <td>
+                    <select class="user-status-select" data-user-id="<%= user._id %>">
+                      <option value="ACTIVE" <%= user.memberStatus === 'ACTIVE' ? 'selected' : '' %>>Active</option>
+                      <option value="BLOCK" <%= user.memberStatus === 'BLOCK' ? 'selected' : '' %>>Blocked</option>
+                      <option value="DELETE" <%= user.memberStatus === 'DELETE' ? 'selected' : '' %>>Delete</option>
+                    </select>
+                    <div class="status-indicator <%= user.memberStatus.toLowerCase() %>"></div>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    <% } %>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <script type="text/javascript" src="/js/users.js"></script>
+</body>
+
+<%- include('includes/footer') %>

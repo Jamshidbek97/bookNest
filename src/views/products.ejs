@@ -1,0 +1,385 @@
+<%- include('includes/header') %>
+
+<link rel="stylesheet" type="text/css" href="/css/products.css" />
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+/>
+
+<body>
+  <div class="background-container">
+    <div class="book-background"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+  </div>
+
+  <div class="products-container">
+    <!-- Navigation Menu -->
+    <nav class="admin-nav">
+      <ul>
+        <li>
+          <a href="/admin/"><i class="fas fa-home"></i> Dashboard</a>
+        </li>
+        <li class="active">
+          <a href="/admin/product/all"
+            ><i class="fas fa-book"></i> Book Inventory</a
+          >
+        </li>
+        <li>
+          <a href="/admin/user/all"><i class="fas fa-users"></i> Users</a>
+        </li>
+        <li>
+          <a
+            href="/admin/logout"
+            onclick="return confirm('Do you want to logout?')"
+            ><i class="fas fa-sign-out-alt"></i> Logout</a
+          >
+        </li>
+      </ul>
+    </nav>
+
+    <div class="book-management-container">
+      <!-- Book Inventory Table -->
+      <div class="book-inventory">
+        <div class="inventory-header">
+          <h2><i class="fas fa-book-open"></i> Book Inventory</h2>
+          <button class="btn btn-add" id="add-book-btn">
+            <i class="fas fa-plus-circle"></i> Add New Book
+          </button>
+        </div>
+
+        <div class="table-responsive">
+          <table class="book-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Cover</th>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Genre</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Popularity</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% books.map(function(book, index){ %>
+              <tr>
+                <td><%= index + 1 %></td>
+                <td class="book-cover">
+                  <% if(book.coverImages && book.coverImages.length > 0) { %>
+                  <img
+                    src="/<%= book.coverImages[0] %>"
+                    alt="<%= book.title %>"
+                  />
+                  <% } else { %>
+                  <div class="no-cover"><i class="fas fa-book"></i></div>
+                  <% } %>
+                </td>
+                <td class="book-title"><%= book.title %></td>
+                <td><%= book.author %></td>
+                <td><span class="genre-badge"><%= book.genre %></span></td>
+                <td>$<%= book.price.toFixed(2) %></td>
+                <td>
+                  <span
+                    class="stock-count <%= book.stockCount > 50 ? 'in-stock' : 'out-of-stock' %>"
+                  >
+                    <%= typeof book.stockCount === 'undefined' ||
+                    book.stockCount === null ? 'Unlimited' : book.stockCount %>
+                  </span>
+                </td>
+                <td>
+                  <div class="popularity-indicator">
+                    <span class="views" title="Views"
+                      ><i class="fas fa-eye"></i> <%= book.bookViews || 0
+                      %></span
+                    >
+                    <span class="likes" title="Likes"
+                      ><i class="fas fa-heart"></i> <%= book.bookLikes || 0
+                      %></span
+                    >
+                    <span class="borrows" title="Borrows"
+                      ><i class="fas fa-exchange-alt"></i> <%=
+                      book.timesBorrowed || 0 %></span
+                    >
+                  </div>
+                </td>
+                <td>
+  <select class="status-select" data-book-id="<%= book._id %>">
+    <option value="AVAILABLE" <%= book.status === 'AVAILABLE' ? 'selected' : '' %> >AVAILABLE</option>
+    <option value="OUT_OF_STOCK" <%= book.status === 'OUT_OF_STOCK' ? 'selected' : '' %>>OUT OF STOCK</option>
+    <option value="ARCHIVED" <%= book.status === 'ARCHIVED' ? 'selected' : '' %>>ARCHIVED</option>
+    <option value="DISCONTINUED" <%= book.status === 'DISCONTINUED' ? 'selected' : '' %>>DISCONTINUED</option>
+    <option value="PREORDER" <%= book.status === 'PREORDER' ? 'selected' : '' %>>PREORDER</option>
+  </select>
+</td>
+              </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <form
+        class="book-form"
+        id="book-form"
+        action="/admin/product/create"
+        method="POST"
+        enctype="multipart/form-data"
+      >
+        <div class="form-header">
+          <h3><i class="fas fa-book-medical"></i> Add New Book</h3>
+          <button type="button" class="btn btn-close" id="close-form-btn">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+
+        <div class="form-grid">
+          <!-- Book Details -->
+          <div class="form-section">
+            <div class="display-row">
+              <div class="form-group">
+                <label for="title"
+                  ><i class="fas fa-heading"></i> Title *</label
+                >
+                <input
+                  type="text"
+                  id="title"
+                  name="title"
+                  class="form-control"
+                  required
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="author"
+                  ><i class="fas fa-user-edit"></i> Author *</label
+                >
+                <input
+                  type="text"
+                  id="author"
+                  name="author"
+                  class="form-control"
+                  required
+                />
+              </div>
+            </div>
+            <div class="display-row">
+              <div class="form-group">
+                <label for="genre"><i class="fas fa-tags"></i> Genre *</label>
+                <select id="genre" name="genre" class="form-control" required>
+                  <option value="FICTION">Fiction</option>
+                  <option value="NON_FICTION">Non-Fiction</option>
+                  <option value="SCIENCE_FICTION">Science Fiction</option>
+                  <option value="FANTASY">Fantasy</option>
+                  <option value="MYSTERY">Mystery</option>
+                  <option value="ROMANCE">Romance</option>
+                  <option value="HISTORICAL">Historical</option>
+                  <option value="BIOGRAPHY">Biography</option>
+                  <option value="SELF_HELP">Self Help</option>
+                  <option value="CHILDREN">Children</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="description"
+                  ><i class="fas fa-align-left"></i> Description</label
+                >
+                <textarea
+                  id="description"
+                  name="description"
+                  class="form-control"
+                  rows="4"
+                ></textarea>
+              </div>
+            </div>
+
+            <!-- Inventory Details -->
+            <div class="form-section">
+              <div class="display-row">
+                <div class="form-group">
+                  <label for="price"
+                    ><i class="fas fa-dollar-sign"></i> Price *</label
+                  >
+                  <input
+                    type="number"
+                    id="price"
+                    name="price"
+                    class="form-control"
+                    step="0.01"
+                    min="0"
+                    required
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="stock"
+                    ><i class="fas fa-boxes"></i> Stock Count *</label
+                  >
+                  <input
+                    type="number"
+                    id="stock"
+                    name="stockCount"
+                    class="form-control"
+                    min="0"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="display-row">
+                <div class="form-group">
+                  <label for="format"
+                    ><i class="fas fa-bookmark"></i> Format *</label
+                  >
+                  <select
+                    id="format"
+                    name="format"
+                    class="form-control"
+                    required
+                  >
+                    <option value="HARDCOVER">Hardcover</option>
+                    <option value="PAPERBACK" selected>Paperback</option>
+                    <option value="EBOOK">E-book</option>
+                    <option value="AUDIO">Audiobook</option>
+                  </select>
+                </div>
+
+                <div class="form-group" id="pageCountGroup">
+                  <label for="pages"
+                    ><i class="fas fa-file-alt"></i> Page Count</label
+                  >
+                  <input
+                    type="number"
+                    id="pages"
+                    name="pageCount"
+                    class="form-control"
+                    min="1"
+                  />
+                </div>
+                <div
+                  class="form-group"
+                  id="durationGroup"
+                  style="display: none"
+                >
+                  <label for="duration"
+                    ><i class="fas fa-clock"></i> Duration (minutes)</label
+                  >
+                  <input
+                    type="text"
+                    id="duration"
+                    name="duration"
+                    class="form-control"
+                    min="1"
+                  />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <small
+                  id="digitalStockNote"
+                  class="form-text"
+                  style="display: none; color: #6440fb"
+                >
+                  <i class="fas fa-infinity"></i> Digital items have unlimited
+                  stock
+                </small>
+              </div>
+
+              <!-- Image Upload -->
+              <div class="form-section full-width">
+                <div class="form-group">
+                  <label><i class="fas fa-images"></i> Cover Images</label>
+                  <div class="image-upload-grid">
+                    <div class="image-upload-box">
+                      <img
+                        src="/img/upload.jpg"
+                        class="preview-image"
+                        id="preview-1"
+                      />
+                      <input
+                        type="file"
+                        name="coverImages"
+                        accept="image/*"
+                        class="image-upload"
+                        data-preview-id="1"
+                      />
+                      <div class="upload-overlay">
+                        <i class="fas fa-camera"></i> Click to upload
+                      </div>
+                    </div>
+                    <div class="image-upload-box">
+                      <img
+                        src="/img/upload.jpg"
+                        class="preview-image"
+                        id="preview-2"
+                      />
+                      <input
+                        type="file"
+                        name="coverImages"
+                        accept="image/*"
+                        class="image-upload"
+                        data-preview-id="2"
+                      />
+                      <div class="upload-overlay">
+                        <i class="fas fa-camera"></i> Click to upload
+                      </div>
+                    </div>
+                    <div class="image-upload-box">
+                      <img
+                        src="/img/upload.jpg"
+                        class="preview-image"
+                        id="preview-3"
+                      />
+                      <input
+                        type="file"
+                        name="coverImages"
+                        accept="image/*"
+                        class="image-upload"
+                        data-preview-id="3"
+                      />
+                      <div class="upload-overlay">
+                        <i class="fas fa-camera"></i> Click to upload
+                      </div>
+                    </div>
+                    <div class="image-upload-box">
+                      <img
+                        src="/img/upload.jpg"
+                        class="preview-image"
+                        id="preview-4"
+                      />
+                      <input
+                        type="file"
+                        name="coverImages"
+                        accept="image/*"
+                        class="image-upload"
+                        data-preview-id="4"
+                      />
+                      <div class="upload-overlay">
+                        <i class="fas fa-camera"></i> Click to upload
+                      </div>
+                    </div>
+                  </div>
+                  <p class="upload-hint">
+                    Upload up to 4 cover images (JPEG, PNG, max 2MB each)
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="reset" class="btn btn-cancel">Reset</button>
+            <button type="submit" class="btn btn-submit">Save Book</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script type="text/javascript" src="/js/products.js"></script>
+</body>
+
+<%- include('includes/footer') %>
